@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface IndividualRepository extends JpaRepository<Individual, Long> {
-    Optional<List<Individual>> findByPassport (String passport);
-    Optional<List<Individual>> findByIdentCode (String identCode);
-    Optional<List<Individual>> findByAddress (String address);
+    Optional<Individual> findByPassport (String passport);
+    Optional<Individual> findByIdentCode (String identCode);
+    List<Individual> findByAddress (String address);
 }
