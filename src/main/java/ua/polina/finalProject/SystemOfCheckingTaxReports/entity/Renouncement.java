@@ -1,5 +1,6 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,15 @@ public class Renouncement {
     @Column(name="id")
     private Long id;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name="report_id")
     private Report report;
 
+    @Column(name="date")
     private Date date;
-    private String reason;
 
+    @NotNull
+    @Column(name="reason")
+    private String reason;
 }

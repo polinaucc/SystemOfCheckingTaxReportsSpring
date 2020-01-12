@@ -1,16 +1,20 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "report")
@@ -31,9 +35,11 @@ public class Report {
     @Column(name="date")
     private Date date;
 
+    @NotBlank(message = "Comment is mandatory")
     @Column(name="comment")
     private String comment;
 
+    @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;

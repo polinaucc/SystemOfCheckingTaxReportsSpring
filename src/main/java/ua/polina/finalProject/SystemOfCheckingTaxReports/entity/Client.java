@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -21,10 +22,12 @@ public class Client {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotNull
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "userFk")
     private User user;
 
+    @NotNull
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private ClientType clientType;

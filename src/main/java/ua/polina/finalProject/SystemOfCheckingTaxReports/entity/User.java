@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
@@ -25,9 +26,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    @NotBlank(message = "Email is mandatory")
     @Column(name = "email", nullable = false)
     private String email;
 
+    @NotBlank(message = "Password  is mandatory")
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -36,6 +39,4 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Inspector inspector;
-
-
 }
