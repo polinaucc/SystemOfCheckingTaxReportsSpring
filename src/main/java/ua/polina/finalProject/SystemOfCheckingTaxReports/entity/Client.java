@@ -1,5 +1,7 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +26,7 @@ public class Client {
 
     @NotNull
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userFk")
+    @JoinColumn(name = "user_fk")
     private User user;
 
     @NotNull
@@ -32,15 +34,19 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private ClientType clientType;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "client")
     private Individual individual;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "client")
     private LegalEntity legalEntity;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "client")
     private Report report;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client")
     private Set<Claim> claims;
 }

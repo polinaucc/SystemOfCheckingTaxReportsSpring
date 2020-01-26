@@ -22,12 +22,12 @@ public class Claim {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @JoinColumn(name="clientFK")
+    @JoinColumn(name="clientFk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Client client;
 
     @NotNull
-    @JoinColumn(name="inspectorFK")
+    @JoinColumn(name="inspectorFk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Inspector inspector;
 

@@ -24,7 +24,7 @@ public class LegalEntity {
 
     @NotNull
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="clientFk")
+    @JoinColumn(name="client_fk")
     private Client client;
 
     @NotBlank(message = "Name is mandatory")

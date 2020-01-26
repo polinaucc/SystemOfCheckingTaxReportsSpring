@@ -1,5 +1,6 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,11 +26,11 @@ public class Report {
     private Long id;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="clientFk")
+    @JoinColumn(name="client_fk")
     private Client client;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="inspectorFk")
+    @JoinColumn(name="inspector_fk")
     private Inspector inspector;
 
     @Column(name="date")
@@ -46,11 +47,12 @@ public class Report {
 
     @ManyToMany
     @JoinTable(
-            name = "attached_fi;es",
+            name = "attached_file",
             joinColumns = @JoinColumn(name = "report_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id"))
     private Set<File> files;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "report")
     private Set<Renouncement> renouncement;
 }

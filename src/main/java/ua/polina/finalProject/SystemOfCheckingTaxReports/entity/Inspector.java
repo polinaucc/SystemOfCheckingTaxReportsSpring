@@ -1,5 +1,6 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,13 +39,14 @@ public class Inspector {
     private Date employmentDate;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userFk")
+    @JoinColumn(name = "user_fk")
     private User user;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "inspector")
     private Report report;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "inspector")
     private Set<Claim> claims;
-
 }

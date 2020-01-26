@@ -1,5 +1,6 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,10 @@ public class Individual {
     @Column(name="id")
     private Long id;
 
+    @JsonIgnore
     @NotNull
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="clientFk")
+    @JoinColumn(name="client_fk")
     private Client client;
 
     @NotBlank(message = "Surname is mandatory")
