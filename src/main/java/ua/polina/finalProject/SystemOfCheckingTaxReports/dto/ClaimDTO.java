@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
-
-import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class InspectorsDTO {
-    private List<Inspector> inspectors;
+public class ClaimDTO {
+    private Long clientId;
+    private Long inspectorId;
+    private String reason;
+    private String status;
 }
