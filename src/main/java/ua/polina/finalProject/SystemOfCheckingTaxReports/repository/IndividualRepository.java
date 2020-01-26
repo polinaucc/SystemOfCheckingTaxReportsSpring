@@ -12,4 +12,6 @@ public interface IndividualRepository extends JpaRepository<Individual, Long> {
     Optional<Individual> findByPassport (String passport);
     Optional<Individual> findByIdentCode (String identCode);
     List<Individual> findByAddress (String address);
+    boolean existsIndividualByPassport(String passport);
+    boolean existsIndividualByIdentCode(String identCode);
 }

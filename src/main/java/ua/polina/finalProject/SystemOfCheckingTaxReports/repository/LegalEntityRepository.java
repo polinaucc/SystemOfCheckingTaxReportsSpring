@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface LegalEntityRepository extends JpaRepository<LegalEntity, Long> {
     Optional<LegalEntity> findByEdrpou(String edrpou);
+    boolean existsLegalEntityByEdrpou(String edrpou);
+    boolean existsLegalEntityByName(String name);
 }
