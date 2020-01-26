@@ -2,15 +2,18 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.IndividualsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Individual;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.IndividualRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Slf4j
 @Service
 public class IndividualService {
@@ -19,6 +22,11 @@ public class IndividualService {
     @Autowired
     public IndividualService(IndividualRepository individualRepository) {
         this.individualRepository = individualRepository;
+    }
+
+    public List<Individual> getAllIndividuals(Pageable pageable) {
+        Page<Individual> allIndividuals = individualRepository.findAll(pageable);
+        return allIndividuals.getContent();
     }
 
     public Optional<Individual> getById(Long id) {
@@ -33,8 +41,8 @@ public class IndividualService {
         return individualRepository.findByPassport(passport);
     }
 
-    public IndividualsDTO getByAddress(String address) {
-        return new IndividualsDTO(individualRepository.findByAddress(address));
+    public List<Individual> getByAddress(String address) {
+        return individualRepository.findByAddress(address);
     }
 
     public Optional<Individual> getByIdentCode(String identCode) {
@@ -45,6 +53,7 @@ public class IndividualService {
         individualRepository.deleteById(id);
     }
 
+    @Transactional
     public Individual update(Individual individual) {
         Long id = individual.getId();
         return individualRepository.findById(id).map(individualFromDB -> {
@@ -58,5 +67,13 @@ public class IndividualService {
 
             return individualRepository.save(individualFromDB);
         }).orElseGet(() -> individualRepository.save(individual));
+    }
+
+    public boolean isExistByPassport(String passport){
+        return individualRepository.existsIndividualByPassport(passport);
+    }
+
+    public boolean isExistByIdentCode(String identCode){
+        return individualRepository.existsIndividualByIdentCode(identCode);
     }
 }

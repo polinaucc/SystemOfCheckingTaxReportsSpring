@@ -4,13 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.InspectorsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.InspectorRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -24,10 +25,9 @@ public class InspectorService {
         this.inspectorRepository = inspectorRepository;
     }
 
-    public InspectorsDTO getAllInspectors(int page, int size, String sortParameter, String sortDir) {
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        Page<Inspector> allInspectors = inspectorRepository.findAll(pageReq);
-        return new InspectorsDTO(allInspectors.getContent());
+    public List<Inspector> getAllInspectors(Pageable pageable) {
+        Page<Inspector> allInspectors = inspectorRepository.findAll(pageable);
+        return allInspectors.getContent();
     }
 
     public Optional<Inspector> getById(Long id){

@@ -4,13 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.LegalEntitiesDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.LegalEntity;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.LegalEntityRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -24,10 +25,9 @@ public class LegalEntityService {
         this.legalEntityRepository = legalEntityRepository;
     }
 
-    public LegalEntitiesDTO getAllLegalEntities(int page, int size, String sortParametr, String sortDir) {
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParametr);
-        Page<LegalEntity> allLegalEntities = legalEntityRepository.findAll(pageReq);
-        return new LegalEntitiesDTO(allLegalEntities.getContent());
+    public List<LegalEntity> getAllLegalEntities(Pageable pageable) {
+        Page<LegalEntity> allLegalEntities = legalEntityRepository.findAll(pageable);
+        return allLegalEntities.getContent();
     }
 
     public Optional<LegalEntity> getById(Long id) {
@@ -57,5 +57,13 @@ public class LegalEntityService {
 
     public void deleteById (Long id) {
         legalEntityRepository.deleteById(id);
+    }
+
+    public boolean isExistByEdrpou(String edrpou){
+        return legalEntityRepository.existsLegalEntityByEdrpou(edrpou);
+    }
+
+    public boolean isExistByName(String name){
+        return legalEntityRepository.existsLegalEntityByEdrpou(name);
     }
 }

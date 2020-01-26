@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ClaimsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Claim;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Client;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
@@ -14,6 +14,7 @@ import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ClaimReposit
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Slf4j
@@ -27,29 +28,25 @@ public class ClaimService {
         this.claimRepository = claimRepository;
     }
 
-    public void saveNewClaim(Claim claim) {
-        try {
-            claimRepository.save(claim);
-        } catch (Exception exc) {
-            log.info("Cannot save");
-        }
+    public Claim saveNewClaim(Claim claim) {
+        return claimRepository.save(claim);
     }
 
-    public ClaimsDTO getAllClaims(int page, int size, String sortParameter, String sortDir) {
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        Page<Claim> allClaims = claimRepository.findAll(pageReq);
+    public Optional<Claim> getClaimById(Long id){
+        return claimRepository.findById(id);
+    }
+
+    public List<Claim> getAllClaims(Pageable pageable) {
+        Page<Claim> allClaims = claimRepository.findAll(pageable);
         List<Claim> claims = allClaims.getContent();
-        if (claims.size() < 1) {
-
-        }
-        return new ClaimsDTO(claims);
+        return claims;
     }
 
-    public ClaimsDTO getClaimsByClient(Client client) {
-        return new ClaimsDTO(claimRepository.findByClient(client));
+    public List<Claim> getClaimsByClient(Client client) {
+        return claimRepository.findByClient(client);
     }
 
-    public ClaimsDTO getClaimsByInspector(Inspector inspector) {
-        return new ClaimsDTO(claimRepository.findByInspector(inspector));
+    public List<Claim> getClaimsByInspector(Inspector inspector) {
+        return claimRepository.findByInspector(inspector);
     }
 }

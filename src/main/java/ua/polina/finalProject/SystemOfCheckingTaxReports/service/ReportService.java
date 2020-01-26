@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ReportsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Client;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Report;
@@ -15,6 +15,7 @@ import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ReportReposi
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -28,41 +29,40 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-    public ReportsDTO getAllReports(int page, int size, String sortParametr, String sortDir){
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParametr);
-        Page<Report> allReports = reportRepository.findAll(pageReq);
-        return new ReportsDTO(allReports.getContent());
+    public List<Report> getAllReports(Pageable pageable) {
+        Page<Report> allReports = reportRepository.findAll(pageable);
+        return allReports.getContent();
     }
 
-    public Optional<Report> getById(Long id){
+    public Optional<Report> getById(Long id) {
         return reportRepository.findById(id);
     }
 
-    public Report saveNewReport(Report report){
+    public Report saveNewReport(Report report) {
         return reportRepository.save(report);
     }
 
-    public ReportsDTO getByClient(Client client){
-        return new ReportsDTO(reportRepository.findByClient(client));
+    public List<Report> getByClient(Client client) {
+        return reportRepository.findByClient(client);
     }
 
-    public ReportsDTO getByInspector(Inspector inspector){
-        return new ReportsDTO(reportRepository.findByInspector(inspector));
+    public List<Report> getByInspector(Inspector inspector) {
+        return reportRepository.findByInspector(inspector);
     }
 
-    public ReportsDTO getByDate(Date date){
-        return new ReportsDTO(reportRepository.findByDate(date));
+    public List<Report> getByDate(Date date) {
+        return reportRepository.findByDate(date);
     }
 
-    public ReportsDTO getBetweenDates (Date startDate, Date endDate) {
-        return new ReportsDTO(reportRepository.findByDateBetween(startDate, endDate));
+    public List<Report> getBetweenDates(Date startDate, Date endDate) {
+        return reportRepository.findByDateBetween(startDate, endDate);
     }
 
-    public ReportsDTO getByStatus(Status status){
-        return new ReportsDTO(reportRepository.findByStatus(status));
+    public List<Report> getByStatus(Status status) {
+        return reportRepository.findByStatus(status);
     }
 
-    public void deleteById (Long id) {
+    public void deleteById(Long id) {
         reportRepository.deleteById(id);
     }
 
