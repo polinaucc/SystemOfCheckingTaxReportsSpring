@@ -9,20 +9,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ClaimsDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ReportsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Client;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Report;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ReportRepository;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ReportServiceTest {
@@ -31,7 +25,7 @@ class ReportServiceTest {
 
     @InjectMocks
     ReportService reportService;
-    ReportsDTO reports;
+    List<Report> reports;
     Client clientWith1ID;
     Client clientWith2ID;
     Inspector inspector;
@@ -39,8 +33,7 @@ class ReportServiceTest {
     @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        reports = ReportsDTO.builder()
-                .reports(Arrays.asList(
+        reports = Arrays.asList(
                         Report.builder()
                                 .id(1L)
                                 .client(clientWith1ID)
@@ -53,8 +46,7 @@ class ReportServiceTest {
                                 .inspector(inspector)
                                 .status(Status.REJECTED)
                                 .build()
-                ))
-                .build();
+                );
     }
 
     @Test
@@ -64,16 +56,16 @@ class ReportServiceTest {
         String sortParameter = "status";
         String sortDir = "asc";
         PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        when(reportRepository.findAll(pageReq)).thenReturn(new PageImpl<>(reports.getReports()));
+        when(reportRepository.findAll(pageReq)).thenReturn(new PageImpl<>(reports));
 
-        ReportsDTO actualReportsDTO = reportService.getAllReports(page, size, sortParameter, sortDir);
+        List<Report> actualReportsDTO = reportService.getAllReports(pageReq);
 
         Assert.assertEquals(reports, actualReportsDTO);
     }
 
     @Test
     void getById() {
-        Report expectedReport = reports.getReports().get(0);
+        Report expectedReport = reports.get(0);
         Long reportID = expectedReport.getId();
         Optional<Report> expectedOptionalReport = Optional.of(expectedReport);
         when(reportRepository.findById(reportID)).thenReturn(expectedOptionalReport);
@@ -85,25 +77,25 @@ class ReportServiceTest {
 
     @Test
     void saveNewReport() {
-        Report currentReport = reports.getReports().get(0);
+        Report currentReport = reports.get(0);
         reportService.saveNewReport(currentReport);
         verify(reportRepository, times(1)).save(currentReport);
     }
 
     @Test
     void getByClient() {
-        when(reportRepository.findByClient(clientWith1ID)).thenReturn(reports.getReports());
+        when(reportRepository.findByClient(clientWith1ID)).thenReturn(reports);
 
-        ReportsDTO actualReports = reportService.getByClient(clientWith1ID);
+        List<Report> actualReports = reportService.getByClient(clientWith1ID);
 
         Assert.assertEquals(reports, actualReports);
     }
 
     @Test
     void getByInspector() {
-        when(reportRepository.findByInspector(inspector)).thenReturn(reports.getReports());
+        when(reportRepository.findByInspector(inspector)).thenReturn(reports);
 
-        ReportsDTO actualReports = reportService.getByInspector(inspector);
+        List<Report> actualReports = reportService.getByInspector(inspector);
 
         Assert.assertEquals(reports, actualReports);
     }
@@ -111,10 +103,10 @@ class ReportServiceTest {
     @Test
     void getByDate() {
         Date date = new Date();
-        ReportsDTO expectedReports = new ReportsDTO(Arrays.asList(reports.getReports().get(0)));
-        when(reportRepository.findByDate(date)).thenReturn(Arrays.asList(reports.getReports().get(0)));
+        List<Report> expectedReports = Collections.singletonList(reports.get(0));
+        when(reportRepository.findByDate(date)).thenReturn(Collections.singletonList(reports.get(0)));
 
-        ReportsDTO actualReports = reportService.getByDate(date);
+        List<Report> actualReports = reportService.getByDate(date);
 
         Assert.assertEquals(expectedReports, actualReports);
     }
@@ -123,33 +115,33 @@ class ReportServiceTest {
     void getBetweenDates () {
         Date startDate = new Date();
         Date endDate = new Date();
-        ReportsDTO expectedReports = new ReportsDTO(Arrays.asList(reports.getReports().get(0)));
-        when(reportRepository.findByDateBetween(startDate, endDate)).thenReturn(Arrays.asList(reports.getReports().get(0)));
+        List<Report> expectedReports = Arrays.asList(reports.get(0));
+        when(reportRepository.findByDateBetween(startDate, endDate)).thenReturn(Arrays.asList(reports.get(0)));
 
-        ReportsDTO actualReports = reportService.getBetweenDates(startDate, endDate);
+        List<Report> actualReports = reportService.getBetweenDates(startDate, endDate);
 
         Assert.assertEquals(expectedReports, actualReports);
     }
 
     @Test
     void getByStatus() {
-        when(reportRepository.findByStatus(Status.ACCEPTED)).thenReturn(reports.getReports());
+        when(reportRepository.findByStatus(Status.ACCEPTED)).thenReturn(reports);
 
-        ReportsDTO actualReports = reportService.getByStatus(Status.ACCEPTED);
+        List<Report> actualReports = reportService.getByStatus(Status.ACCEPTED);
 
         Assert.assertEquals(reports, actualReports);
     }
 
     @Test
     void update() {
-        Report currentReport = reports.getReports().get(0);
+        Report currentReport = reports.get(0);
         reportService.update(currentReport);
         verify(reportRepository, times(1)).save(currentReport);
     }
 
     @Test
     void deleteById() {
-        Long currentReportID = reports.getReports().get(0).getId();
+        Long currentReportID = reports.get(0).getId();
         reportService.deleteById(currentReportID);
         verify(reportRepository, times(1)).deleteById(currentReportID);
     }

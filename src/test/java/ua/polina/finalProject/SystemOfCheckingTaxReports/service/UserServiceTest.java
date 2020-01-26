@@ -9,16 +9,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ClaimsDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.UsersDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Individual;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.User;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.UserRepository;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -27,13 +24,12 @@ class UserServiceTest {
 
     @InjectMocks
     UserService userService;
-    UsersDTO users;
+    private List<User> users;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        users = UsersDTO.builder()
-                .users(Arrays.asList(
+        users =Arrays.asList(
                         User.builder()
                                 .id(1L)
                                 .email("user1@gmail.com")
@@ -44,9 +40,7 @@ class UserServiceTest {
                                 .email("user2@gmail.com")
                                 .password("user2")
                                 .build()
-                ))
-                .build();
-
+                );
     }
 
     @Test
@@ -56,16 +50,16 @@ class UserServiceTest {
         String sortParameter = "reason";
         String sortDir = "asc";
         PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        when(userRepository.findAll(pageReq)).thenReturn(new PageImpl<>(users.getUsers()));
+        when(userRepository.findAll(pageReq)).thenReturn(new PageImpl<>(users));
 
-        UsersDTO actualUsers = userService.getAllUsers(page, size, sortParameter, sortDir);
+        List<User> actualUsers = userService.getAllUsers(page, size, sortParameter, sortDir);
 
         Assert.assertEquals(users, actualUsers);
     }
 
     @Test
     void getById() {
-        User expectedUser = users.getUsers().get(0);
+        User expectedUser = users.get(0);
         Long userID = 1L;
         Optional<User> expectedOptionalUser = Optional.of(expectedUser);
         when(userRepository.findById(userID)).thenReturn(expectedOptionalUser);
@@ -77,7 +71,7 @@ class UserServiceTest {
 
     @Test
     void getByEmail() {
-        User expectedUser = users.getUsers().get(0);
+        User expectedUser = users.get(0);
         String userEmail = "user1@gmail.com";
         Optional<User> expectedOptionalUser = Optional.of(expectedUser);
         when(userRepository.findByEmail(userEmail)).thenReturn(expectedOptionalUser);

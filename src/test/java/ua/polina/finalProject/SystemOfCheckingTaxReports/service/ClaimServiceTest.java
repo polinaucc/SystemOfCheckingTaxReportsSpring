@@ -10,14 +10,15 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.ClaimsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ClaimRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,8 +30,8 @@ class ClaimServiceTest {
     ClaimRepository claimRepository;
     @InjectMocks
     ClaimService claimService;
-    ClaimsDTO claims;
-    ClaimsDTO claimsWithj11elements;
+    List<Claim> claims;
+    List<Claim> claimsWithj11elements;
     Inspector inspector;
     Client clientWith1ID;
     Client clientWith2ID;
@@ -48,21 +49,17 @@ class ClaimServiceTest {
                 .inspector(inspector)
                 .build();
         MockitoAnnotations.initMocks(this);
-        claims = ClaimsDTO.builder()
-                .claims(Arrays.asList(claim1, claim2))
-                .build();
+        claims = Arrays.asList(claim1, claim2);
 
-        claimsWithj11elements = ClaimsDTO.builder()
-                .claims(Stream.concat(
+        claimsWithj11elements = Stream.concat(
                         Collections.nCopies(5, claim1).stream(),
                         Collections.nCopies(6, claim2).stream()
-                ).collect(Collectors.toList()))
-                .build();
+                ).collect(Collectors.toList());
     }
 
     @Test
     void saveNewClaim() {
-        Claim currentClaim = claims.getClaims().get(0);
+        Claim currentClaim = claims.get(0);
         claimService.saveNewClaim(currentClaim);
         verify(claimRepository, times(1)).save(currentClaim);
     }
@@ -74,23 +71,35 @@ class ClaimServiceTest {
         String sortParameter = "reason";
         String sortDir = "asc";
         PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(claims.getClaims()));
+        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(claims));
 
-        ClaimsDTO actualClaimsDTO = claimService.getAllClaims(page, size, sortParameter, sortDir);
+        List<Claim> actualList = claimService.getAllClaims(pageReq);
 
-        Assert.assertEquals(claims, actualClaimsDTO);
+        Assert.assertEquals(claims, actualList);
     }
 
     @Test
     void getClaimsByClient() {
-        Claim clientWith2IDClaim = claims.getClaims().get(1);
+        Claim clientWith2IDClaim = claims.get(1);
         List<Claim> expectedClaimsList = Arrays.asList(clientWith2IDClaim);
         when(claimRepository.findByClient(clientWith2ID)).thenReturn(expectedClaimsList);
 
-        ClaimsDTO actualClaims = claimService.getClaimsByClient(clientWith2ID);
+        List<Claim> actualClaims = claimService.getClaimsByClient(clientWith2ID);
 
-        Assert.assertEquals(1, actualClaims.getClaims().size());
-        Assert.assertEquals(expectedClaimsList, actualClaims.getClaims());
+        Assert.assertEquals(1, actualClaims.size());
+        Assert.assertEquals(expectedClaimsList, actualClaims);
+    }
+
+    @Test
+    public void getClaimById(){
+        Claim expectedClaim = claims.get(0);
+        Long claimID = expectedClaim.getId();
+        Optional<Claim> expectedOptionalClaim = Optional.of(expectedClaim);
+        when(claimRepository.findById(claimID)).thenReturn(expectedOptionalClaim);
+
+        Optional<Claim> actualClaim = claimService.getClaimById(claimID);
+
+        Assert.assertEquals(expectedOptionalClaim, actualClaim);
     }
 
     @Test
@@ -100,21 +109,21 @@ class ClaimServiceTest {
         String sortParameter = "reason";
         String sortDir = "asc";
         PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        List<Claim> expectedClaims = claimsWithj11elements.getClaims().subList(9, 10);
+        List<Claim> expectedClaims = claimsWithj11elements.subList(9, 10);
         when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(expectedClaims));
 
-        ClaimsDTO actualClaimsDTO = claimService.getAllClaims(page, size, sortParameter, sortDir);
+        List<Claim> actualList = claimService.getAllClaims(pageReq);
 
-        Assert.assertEquals(expectedClaims, actualClaimsDTO.getClaims());
+        Assert.assertEquals(expectedClaims, actualList);
     }
 
     @Test
     void getClaimsByInspector() {
-        when(claimRepository.findByInspector(inspector)).thenReturn(claims.getClaims());
+        when(claimRepository.findByInspector(inspector)).thenReturn(claims);
 
-        ClaimsDTO actualClaimsDTO = claimService.getClaimsByInspector(inspector);
+        List<Claim> actualList = claimService.getClaimsByInspector(inspector);
 
-        Assert.assertEquals(2, actualClaimsDTO.getClaims().size());
-        Assert.assertEquals(actualClaimsDTO, claims);
+        Assert.assertEquals(2, actualList.size());
+        Assert.assertEquals(actualList, claims);
     }
 }

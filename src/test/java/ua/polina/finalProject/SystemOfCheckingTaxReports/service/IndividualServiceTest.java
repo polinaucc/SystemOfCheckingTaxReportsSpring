@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.IndividualsDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Client;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Individual;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
@@ -16,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class IndividualServiceTest {
@@ -26,7 +24,7 @@ class IndividualServiceTest {
 
     @InjectMocks
     IndividualService individualService;
-    IndividualsDTO individuals;
+    List<Individual> individuals;
     Client client;
     Inspector inspector;
     Client clientWith1ID;
@@ -35,8 +33,7 @@ class IndividualServiceTest {
     @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        individuals = IndividualsDTO.builder()
-                .individuals(Arrays.asList(
+        individuals = Arrays.asList(
                         Individual.builder()
                                 .id(1L)
                                 .client(clientWith1ID)
@@ -53,13 +50,12 @@ class IndividualServiceTest {
                                 .address("Peremogy Street, 25")
                                 .surname("Morgan")
                                 .build()
-                ))
-                .build();
+                );
     }
 
     @Test
     public void getById() {
-        Individual expectedIndividual = individuals.getIndividuals().get(0);
+        Individual expectedIndividual = individuals.get(0);
         Long individualID = expectedIndividual.getId();
         Optional<Individual> expectedOptionalIndividual = Optional.of(expectedIndividual);
         when(individualRepository.findById(individualID)).thenReturn(expectedOptionalIndividual);
@@ -71,14 +67,14 @@ class IndividualServiceTest {
 
     @Test
     void saveNewIndividual() {
-        Individual currentIndividual = individuals.getIndividuals().get(0);
+        Individual currentIndividual = individuals.get(0);
         individualService.saveNewIndividual(currentIndividual);
         verify(individualRepository, times(1)).save(currentIndividual);
     }
 
     @Test
     void getByPassport() {
-        Individual expectedIndividual = individuals.getIndividuals().get(0);
+        Individual expectedIndividual = individuals.get(0);
         String individualPassport = "ВТ123456";
         Optional<Individual> expectedOptionalIndividual = Optional.of(expectedIndividual);
         when(individualRepository.findByPassport(individualPassport)).thenReturn(expectedOptionalIndividual);
@@ -91,16 +87,16 @@ class IndividualServiceTest {
     @Test
     void getByAddress() {
         String address = "Peremogy Street, 25";
-        when(individualRepository.findByAddress(address)).thenReturn(individuals.getIndividuals());
+        when(individualRepository.findByAddress(address)).thenReturn(individuals);
 
-        IndividualsDTO actualIndividuals = individualService.getByAddress(address);
+        List<Individual> actualIndividuals = individualService.getByAddress(address);
 
         Assert.assertEquals(individuals, actualIndividuals);
     }
 
     @Test
     void getByIdentCode() {
-        Individual expectedIndividual = individuals.getIndividuals().get(0);
+        Individual expectedIndividual = individuals.get(0);
         String individualIdentCode = "3456123456";
         Optional<Individual> expectedOptionalIndividual = Optional.of(expectedIndividual);
         when(individualRepository.findByIdentCode(individualIdentCode)).thenReturn(expectedOptionalIndividual);
@@ -112,14 +108,14 @@ class IndividualServiceTest {
 
     @Test
     void update() {
-        Individual currentIndividual = individuals.getIndividuals().get(0);
+        Individual currentIndividual = individuals.get(0);
         individualService.update(currentIndividual);
         verify(individualRepository, times(1)).save(currentIndividual);
     }
 
     @Test
     void deleteById() {
-        Long currentIndividualID = individuals.getIndividuals().get(0).getId();
+        Long currentIndividualID = individuals.get(0).getId();
         individualService.deleteById(currentIndividualID);
         verify(individualRepository, times(1)).deleteById(currentIndividualID);
     }
