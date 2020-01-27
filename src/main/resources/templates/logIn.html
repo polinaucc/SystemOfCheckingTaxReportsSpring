@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logIn.css}">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <section id="content">
+        <form th:action="@{/api/auth/login}" th:object="${authenticate}" method="post">
+            <h1>Login Form</h1>
+            <div th:if="${error!=null}">
+                <p>Wrong login or password</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Email" required="" id="email" th:field="*{email}" />
+            </div>
+            <div>
+                <input type="password" placeholder="Password" required="" id="password"  th:field="*{password}"/>
+            </div>
+            <div>
+                <input type="submit" value="Log in" />
+                <a href="RegisterIndividual.html">Register individual</a>
+                <a href="RegisterLegalEntity.html">Register legal</a>
+                <p th:if="jwt!=null">Logged sucessfully</p>
+            </div>
+        </form>
+    </section>
+</div><!-- container -->
+</body>
+</html>

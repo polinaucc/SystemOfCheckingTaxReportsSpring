@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logIn.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/Register.css}">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <section id="content">
+        <form th:action="@{/api/auth/sign-up-individual}" th:object="${sign}" method="post">
+            <h1>Registration form</h1>
+            <div th:if="${error != null}">
+                <p th:text="${error}">...</p>
+            </div>
+            <div th:if="${error2 != null}">
+                <p th:text="${error2}">...</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Email" required="" id="email" th:field="*{email}"/>
+            </div>
+            <div>
+                <input type="password" placeholder="Password" required="" id="password" th:field="*{password}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Surname" required="" id="surname" th:field="*{surname}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="First name" required="" id="firstName" th:field="*{firstName}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Second name" required="" id="secondName" th:field="*{secondName}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Passport" required="" id="passport" th:field="*{passport}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Identification code" required="" id="identCode"
+                       th:field="*{identCode}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Address" required="" id="address" th:field="*{address}"/>
+            </div>
+            <div>
+                <input type="submit" value="Sign up" />
+                <a href="logIn.html">Log in</a>
+            </div>
+        </form><!-- form -->
+
+    </section><!-- content -->
+</div><!-- container -->
+</body>
+</html>
