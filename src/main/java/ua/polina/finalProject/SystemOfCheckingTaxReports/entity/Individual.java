@@ -51,4 +51,9 @@ public class Individual {
     @NotBlank(message = "Address is mandatory")
     @Column(name="address")
     private String address;
+
+    @Override
+    public String toString() {
+        return surname + " " + firstName + " " + secondName;
+    }
 }
