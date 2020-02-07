@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Claims</title>
+    <style>
+        table {
+            width: 100%;
+        }
+
+        table td, table th {
+            border: 1px solid grey;
+        }
+
+        table th {
+            background: #eee;
+        }
+
+        .pagination-div span {
+            border-radius: 3px;
+            border: 1px solid #999;
+            padding: 5px;
+            margin: 10px 0px 0px 10px;
+            display: inline-block
+        }
+
+    </style>
+</head>
+<body>
+<h2>Claims</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th th:text="id"></th>
+        <th th:text="clientName"></th>
+        <th th:text="inspectorName"></th>
+        <th th:text="reason"></th>
+        <th th:text="status"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="claim, iStat : ${claims}"
+        th:style="${iStat.odd}? 'font-weight: bold;'"
+        th:alt-title="${iStat.even}? 'even' : 'odd'">
+        <td th:text="${claim.id}"></td>
+        <td th:text="${claim.client}"></td>
+        <td th:text="${claim.inspector}"></td>
+        <td th:text="${claim.reason}"></td>
+        <td th:text="${claim.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/client/create-claim}">Add claim</a>
+</body>
+</html>

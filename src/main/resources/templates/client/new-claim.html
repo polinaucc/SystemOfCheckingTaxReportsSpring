@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="container">
+    <section id="content">
+        <form th:action="@{/client/create-claim}" th:object="${claim}" th:method="post">
+            <h1>Report</h1>
+            <div>
+                <input type="text" placeholder="Comment" required="" id="comment" th:field="*{reason}"/>
+            </div>
+            <div>
+                <input type="submit" value="Complain" />
+            </div>
+        </form><!-- form -->
+    </section>
+</div>
+</body>
+</html>
