@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inspectors</title>
+    <style>
+        table {
+            width: 100%;
+        }
+
+        table td, table th {
+            border: 1px solid grey;
+        }
+
+        table th {
+            background: #eee;
+        }
+
+        .pagination-div span {
+            border-radius: 3px;
+            border: 1px solid #999;
+            padding: 5px;
+            margin: 10px 0px 0px 10px;
+            display: inline-block
+        }
+    </style>
+</head>
+<body>
+<h2>Inspectors</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th th:text="id"></th>
+        <th th:text="surname"></th>
+        <th th:text="firstName"></th>
+        <th th:text="secondName"></th>
+        <th th:text="employmentDate"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="inspector, iStat : ${inspectorPage.content}"
+        th:style="${iStat.odd}? 'font-weight: bold;'"
+        th:alt-title="${iStat.even}? 'even' : 'odd'">
+        <td th:text="${inspector.id}"></td>
+        <td th:text="${inspector.surname}"></td>
+        <td th:text="${inspector.firstName}"></td>
+        <td th:text="${inspector.secondName}"></td>
+        <td th:text="${inspector.employmentDate}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+    <div th:if="${inspectorPage.totalPages > 0}" class="pagination"
+         th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/admin/inspectors(size=${inspectorPage.size}, page=${pageNumber})}"
+           th:text=${pageNumber}
+           th:class="${pageNumber==inspectorPage.number + 1} ? active"></a>
+    </div>
+
+    <div>
+        <a th:href="@{/admin/save-inspector}">Add new inspector</a>
+    </div>
+
+</body>
+</html>

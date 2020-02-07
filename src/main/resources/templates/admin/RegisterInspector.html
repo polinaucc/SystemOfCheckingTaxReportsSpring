@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logIn.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/Register.css}">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <section id="content">
+        <form th:action="@{/admin/save-inspector}" th:object="${signInspector}" method="post">
+            <h1>Registration form</h1>
+            <div th:if="${error != null}">
+                <p th:text="${error}">...</p>
+            </div>
+            <div th:if="${error2 != null}">
+                <p th:text="${error2}">...</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Email" required="" id="email" th:field="*{userEmail}"/>
+            </div>
+            <div>
+                <input type="password" placeholder="Password" required="" id="password" th:field="*{password}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Surname" required="" id="surname" th:field="*{surname}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="First name" required="" id="firstName" th:field="*{firstName}"/>
+            </div>
+            <div>
+                <input type="text" placeholder="Second name" required="" id="secondName" th:field="*{secondName}"/>
+            </div>
+            <div>
+                <input type="date" placeholder="Employment date" required="" id="employmentDate" th:field="*{employmentDate}"/>
+            </div>
+           <div>
+                <input type="submit" value="Sign up" />
+            </div>
+        </form><!-- form -->
+    </section><!-- content -->
+</div><!-- container -->
+</body>
+</html>

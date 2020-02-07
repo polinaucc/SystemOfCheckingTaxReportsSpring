@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <form th:action="@{/admin/accept-claim}" th:object="${changeInsp}"  method="post">
+        <select th:href="@{/admin/accept-claim}" class="form-control" id="claimOrder"
+                name="claim" th:field="*{inspectorId}">
+            <option th:each="inspector : ${inspectors}"
+                    th:value="${inspector.id}" th:text="${inspector.toString()}"></option>
+        </select>
+
+        <div>
+            <input type="submit" value="Change inspector"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>
