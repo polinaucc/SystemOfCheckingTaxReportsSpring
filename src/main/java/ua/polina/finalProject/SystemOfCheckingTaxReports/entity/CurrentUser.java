@@ -1,6 +1,7 @@
-package ua.polina.finalProject.SystemOfCheckingTaxReports.security;
+package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import java.lang.annotation.*;
 
 @Target({ElementType.PARAMETER, ElementType.TYPE})
