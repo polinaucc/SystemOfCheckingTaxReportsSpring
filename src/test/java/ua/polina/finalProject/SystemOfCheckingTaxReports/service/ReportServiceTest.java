@@ -90,16 +90,16 @@ class ReportServiceTest {
     }
 
 
-    @Test
-    void getByDate() {
-        Date date = new Date();
-        List<Report> expectedReports = Collections.singletonList(reports.get(0));
-        when(reportRepository.findByDate(date)).thenReturn(Collections.singletonList(reports.get(0)));
-
-        List<Report> actualReports = reportService.getByDate(date);
-
-        Assert.assertEquals(expectedReports, actualReports);
-    }
+//    @Test
+//    void getByDate() {
+//        Date date = new Date();
+//        List<Report> expectedReports = Collections.singletonList(reports.get(0));
+//        when(reportRepository.findByDate(date)).thenReturn(Collections.singletonList(reports.get(0)));
+//
+//        List<Report> actualReports = reportService.getByDate(date);
+//
+//        Assert.assertEquals(expectedReports, actualReports);
+//    }
 
 //    @Test
 //    void getBetweenDates () {
