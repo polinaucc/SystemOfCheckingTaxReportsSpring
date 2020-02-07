@@ -26,17 +26,18 @@
     </style>
 </head>
 <body>
-<h2>Individuals</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{individuals}">Individuals</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="surname"></th>
-        <th th:text="firstName"></th>
-        <th th:text="secondName"></th>
-        <th th:text="passport"></th>
-        <th th:text="identCode"></th>
-        <th th:text="address"></th>
+        <th th:text="#{individuals.id}"></th>
+        <th th:text="#{individuals.surname}"></th>
+        <th th:text="#{individuals.first.name}"></th>
+        <th th:text="#{individuals.second.name}"></th>
+        <th th:text="#{individuals.passport}"></th>
+        <th th:text="#{individuals.ident.code}"></th>
+        <th th:text="#{individuals.address}"></th>
     </tr>
     </thead>
     <tbody>

@@ -6,16 +6,17 @@
     <title>Title</title>
 </head>
 <body>
+<th:block th:insert="fragments/language :: language"/>
 <div>
     <form th:action="@{/admin/accept-claim}" th:object="${changeInsp}"  method="post">
-        <select th:href="@{/admin/accept-claim}" class="form-control" id="claimOrder"
+        <select th:label="#{choose.inspector}" th:href="@{/admin/accept-claim}" class="form-control" id="claimOrder"
                 name="claim" th:field="*{inspectorId}">
             <option th:each="inspector : ${inspectors}"
                     th:value="${inspector.id}" th:text="${inspector.toString()}"></option>
         </select>
 
         <div>
-            <input type="submit" value="Change inspector"/>
+            <input type="submit" th:value="#{change.inspector}"/>
         </div>
     </form>
 </div>

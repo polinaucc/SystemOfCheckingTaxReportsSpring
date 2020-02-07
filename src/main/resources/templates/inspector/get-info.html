@@ -26,13 +26,14 @@
     </style>
 </head>
 <body>
-<h2>Reports</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{reports}">Reports</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="reportId"></th>
-        <th th:text="reason"></th>
+        <th th:text="#{renouncements.id}"></th>
+        <th th:text="#{reports.id}"></th>
+        <th th:text="#{renouncements.reason}"></th>
     </tr>
     </thead>
     <tbody>

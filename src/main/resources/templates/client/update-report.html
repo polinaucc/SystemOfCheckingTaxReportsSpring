@@ -5,15 +5,16 @@
     <title>Title</title>
 </head>
 <body>
+<th:block th:insert="fragments/language :: language"/>
 <div class="container">
     <section id="content">
         <form th:action="@{/client/update/{id} (id=${report.id})}" th:object="${report}" th:method="post">
-            <h1>Report</h1>
+            <h1 th:text="#{report}">Report</h1>
             <div>
-                <input type="text" placeholder="Comment" required="" id="comment" th:field="*{comment}"/>
+                <input th:label="#{write.comment}" type="text" placeholder="Comment" required="" id="comment" th:field="*{comment}"/>
             </div>
             <div>
-                <input type="submit" value="Update" />
+                <input type="submit" th:value="#{update}" />
             </div>
         </form><!-- form -->
     </section>

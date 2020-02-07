@@ -26,15 +26,16 @@
     </style>
 </head>
 <body>
-<h2>Reports</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{reports}">Reports</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="client"></th>
-        <th th:text="date"></th>
-        <th th:text="comment"></th>
-        <th th:text="status"></th>
+        <th th:text="#{reports.id}"></th>
+        <th th:text="#{reports.client.name}"></th>
+        <th th:text="#{reports.date}"></th>
+        <th th:text="#{reports.comment}"></th>
+        <th th:text="#{reports.comment}"></th>
     </tr>
     </thead>
     <tbody>
@@ -49,8 +50,6 @@
         <td><a th:href="@{/inspector/reject-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Reject':' '"></a></td>
         <td><a th:href="@{/inspector/accept-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Accept':' '"></a></td>
         <td><a th:href="@{/inspector/info-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).REJECTED} ? 'Info':' '"></a></td>
-
-
     </tr>
     </tbody>
 </table>

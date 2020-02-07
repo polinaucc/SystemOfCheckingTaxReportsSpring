@@ -26,15 +26,16 @@
     </style>
 </head>
 <body>
-<h2>Reports</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{my.reports}">Reports</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="clientName"></th>
-        <th th:text="date"></th>
-        <th th:text="comment"></th>
-        <th th:text="status"></th>
+        <th th:text="#{reports.id}"></th>
+        <th th:text="#{reports.client.name}"></th>
+        <th th:text="#{reports.date}"></th>
+        <th th:text="#{reports.comment}"></th>
+        <th th:text="#{reports.status}"></th>
     </tr>
     </thead>
     <tbody>
@@ -49,7 +50,7 @@
     </tbody>
 </table>
 <div>
-    <a th:href="@{/client/create-new-report}">Create report</a>
+    <a th:href="@{/client/create-new-report}" th:text="#{create.report}">Create report</a>
 </div>
 </body>
 </html>

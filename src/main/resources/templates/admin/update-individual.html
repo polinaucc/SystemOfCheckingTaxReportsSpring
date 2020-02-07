@@ -6,33 +6,34 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/logIn.css}">
 </head>
 <body>
+<th:block th:insert="fragments/language :: language"/>
 <div class="container">
     <section id="content">
         <form th:action="@{/admin/update-individual/{id}(id=${individual.id})}" th:object="${individual}" method="post" >
             <div>
-                <input type="text" placeholder="Surname" required="" id="surname" th:field="*{surname}"/>
+                <input type="text" th:placeholder="#{placeholder.surname}" required="" id="surname" th:field="*{surname}"/>
             </div>
             <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
             <div>
-                <input type="text" placeholder="First name" required="" id="firstName" th:field="*{firstName}"/>
+                <input type="text" th:placeholder="#{placeholder.first.name}" required="" id="firstName" th:field="*{firstName}"/>
             </div>
             <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
             <div>
-                <input type="text" placeholder="Second name" required="" id="secondName" th:field="*{secondName}"/>
+                <input type="text" th:placeholder="#{placeholder.second.name}" required="" id="secondName" th:field="*{secondName}"/>
             </div>
             <span th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></span>
             <div>
-                <input type="text" placeholder="Passport" required="" id="passport" th:field="*{passport}"/>
+                <input type="text" th:placeholder="#{placeholder.passport}" required="" id="passport" th:field="*{passport}"/>
             </div>
             <div>
-                <input type="text" placeholder="Identification code" required="" id="identCode"
+                <input type="text" th:placeholder="#{placeholder.ident.code}" required="" id="identCode"
                        th:field="*{identCode}"/>
             </div>
             <div>
-                <input type="text" placeholder="Address" required="" id="address" th:field="*{address}"/>
+                <input type="text" th:placeholder="#{placeholder.address}" required="" id="address" th:field="*{address}"/>
             </div>
             <div>
-                <input type="submit" value="Update"/>
+                <input type="submit" th:value="#{update}"/>
             </div>
         </form>
     </section>

@@ -6,34 +6,36 @@
     <title>Title</title>
 </head>
 <body>
+<th:block th:insert="fragments/language :: language"/>
+
 <div class="container">
     <section id="content">
         <form th:action="@{/auth/sign-up-legal-entity}" th:object="${sign}" method="post">
-            <h1>Registration form</h1>
+            <h1 th:text="#{registration.form}">Registration form</h1>
             <div th:if="${error!=null}">
                 <p th:text="${error}">...</p>
             </div>
             <div>
-                <input type="text" placeholder="Email" required="" id="email" th:field="*{email}"/>
+                <input type="text" th:placeholder="#{placeholder.email}" required="" id="email" th:field="*{email}"/>
             </div>
             <div>
-                <input type="password" placeholder="Password" required="" id="password" th:field="*{password}" />
+                <input type="password" th:placeholder="#{placeholder.password}" required="" id="password" th:field="*{password}" />
             </div>
             <div>
-                <input type="text" placeholder="Name" required="" id="name" th:field="*{name}"/>
+                <input type="text" th:placeholder="#{placeholder.name}" required="" id="name" th:field="*{name}"/>
             </div>
             <div>
-                <input type="text" placeholder="Edrpou" required="" id="edrpou" th:field="*{edrpou}" />
+                <input type="text" th:placeholder="#{placeholder.edrpou}" required="" id="edrpou" th:field="*{edrpou}" />
             </div>
             <div>
-                <input type="text" placeholder="Mfo" required="" id="mfo" th:field="*{mfo}" />
+                <input type="text" th:placeholder="#{placeholder.mfo}" required="" id="mfo" th:field="*{mfo}" />
             </div>
             <div>
-                <input type="text" placeholder="Address" required="" id="address" th:field="*{address}"/>
+                <input type="text" th:placeholder="#{placeholder.address}" required="" id="address" th:field="*{address}"/>
             </div>
             <div>
-                <input type="submit" value="Sign up" />
-                <a href="logIn.html">Log in</a>
+                <input type="submit" th:value="#{sign.up}" />
+                <a th:href="@{/auth/login}">Log in</a>
             </div>
         </form>
     </section>

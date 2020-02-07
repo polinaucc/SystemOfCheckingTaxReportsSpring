@@ -27,15 +27,16 @@
     </style>
 </head>
 <body>
-<h2>Claims</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{claims}">Claims</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="clientName"></th>
-        <th th:text="inspectorName"></th>
-        <th th:text="reason"></th>
-        <th th:text="status"></th>
+        <th th:text="#{claims.id}"></th>
+        <th th:text="#{claims.client}"></th>
+        <th th:text="#{claims.inspector}"></th>
+        <th th:text="#{claims.reason}"></th>
+        <th th:text="#{claims.reason}"></th>
     </tr>
     </thead>
     <tbody>
@@ -51,6 +52,6 @@
     </tbody>
 </table>
 
-<a th:href="@{/client/create-claim}">Add claim</a>
+<a th:href="@{/client/create-claim}" th:text="#{add.new.claim}">Add claim</a>
 </body>
 </html>

@@ -9,12 +9,12 @@
 <div class="container">
     <section id="content">
         <form th:action="@{/client/create-claim}" th:object="${claim}" th:method="post">
-            <h1>Report</h1>
+            <h1 th:text="#{report}">Report</h1>
             <div>
-                <input type="text" placeholder="Comment" required="" id="comment" th:field="*{reason}"/>
+                <input th:label="#{write.comment}" type="text" placeholder="Comment" required="" id="comment" th:field="*{reason}"/>
             </div>
             <div>
-                <input type="submit" value="Complain" />
+                <input type="submit" th:value="#{complain.inspector}" />
             </div>
         </form><!-- form -->
     </section>

@@ -6,13 +6,13 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/get-clients.css}">
 </head>
 <body>
-<h2>My Individuals</h2>
+<h2 th:text="#{my.individuals}">My Individuals</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="email"></th>
-        <th th:text="name"></th>
+        <th th:text="#{individuals.id}"></th>
+        <th th:text="#{individuals.email}"></th>
+        <th th:text="#{individuals.name}"></th>
     </tr>
     </thead>
     <tbody>

@@ -6,13 +6,14 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/get-clients.css}">
 </head>
 <body>
-<h2>My Individuals</h2>
+<th:block th:insert="fragments/language :: language"/>
+<h2 th:text="#{my.legals}">My Legals</h2>
 <table border="1">
     <thead>
     <tr>
-        <th th:text="id"></th>
-        <th th:text="email"></th>
-        <th th:text="name"></th>
+        <th th:text="#{legals.id}"></th>
+        <th th:text="#{legals.email}"></th>
+        <th th:text="#{legals.name}"></th>
     </tr>
     </thead>
     <tbody>
