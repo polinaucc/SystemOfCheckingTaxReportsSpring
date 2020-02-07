@@ -24,4 +24,9 @@ public class File {
 
     @ManyToMany(mappedBy = "files")
     private Set<Report> reports;
+
+    @Override
+    public String toString(){
+        return " ";
+    }
 }

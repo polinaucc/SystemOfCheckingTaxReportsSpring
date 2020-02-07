@@ -14,11 +14,12 @@ import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ReportRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Slf4j
 @Service
 public class ReportService {
@@ -29,9 +30,8 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-    public List<Report> getAllReports(Pageable pageable) {
-        Page<Report> allReports = reportRepository.findAll(pageable);
-        return allReports.getContent();
+    public Page<Report> getAllReports(Pageable pageable) {
+        return reportRepository.findAll(pageable);
     }
 
     public Optional<Report> getById(Long id) {
@@ -44,10 +44,6 @@ public class ReportService {
 
     public List<Report> getByClient(Client client) {
         return reportRepository.findByClient(client);
-    }
-
-    public List<Report> getByInspector(Inspector inspector) {
-        return reportRepository.findByInspector(inspector);
     }
 
     public List<Report> getByDate(Date date) {
@@ -66,16 +62,20 @@ public class ReportService {
         reportRepository.deleteById(id);
     }
 
-    public Report update(Report report) {
+    public Report update(Report report, Status status) {
         Long id = report.getId();
         return reportRepository.findById(id).map(reportFromDB -> {
-            reportFromDB.setClient(report.getClient());
-            reportFromDB.setInspector(report.getInspector());
-            reportFromDB.setDate(report.getDate());
+            reportFromDB.setDate(LocalDateTime.now());
+            reportFromDB.setStatus(status);
             reportFromDB.setComment(report.getComment());
-            reportFromDB.setStatus(report.getStatus());
 
             return reportRepository.save(reportFromDB);
         }).orElseGet(() -> reportRepository.save(report));
     }
+
+    public List<Report> getByInspector(Inspector inspector){
+        return reportRepository.findByInspector(inspector);
+    }
 }
+
+

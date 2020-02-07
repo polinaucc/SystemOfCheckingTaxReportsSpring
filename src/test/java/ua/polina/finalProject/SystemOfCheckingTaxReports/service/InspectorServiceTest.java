@@ -39,19 +39,19 @@ class InspectorServiceTest {
                 );
     }
 
-    @Test
-    void getAll() {
-        int page = 1;
-        int size = 10;
-        String sortParameter = "reason";
-        String sortDir = "asc";
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        when(inspectorRepository.findAll(pageReq)).thenReturn(new PageImpl<>(inspectors));
-
-        List<Inspector> actualInspectors = inspectorService.getAllInspectors(pageReq);
-
-        Assert.assertEquals(actualInspectors, inspectors);
-    }
+//    @Test
+//    void getAll() {
+//        int page = 1;
+//        int size = 10;
+//        String sortParameter = "reason";
+//        String sortDir = "asc";
+//        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
+//        when(inspectorRepository.findAll(pageReq)).thenReturn(new PageImpl<>(inspectors));
+//
+//        List<Inspector> actualInspectors = inspectorService.getAllInspectors(pageReq);
+//
+//        Assert.assertEquals(actualInspectors, inspectors);
+//    }
 
     @Test
     void getById() {

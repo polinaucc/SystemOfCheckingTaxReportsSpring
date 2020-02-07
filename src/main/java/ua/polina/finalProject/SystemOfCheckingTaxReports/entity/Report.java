@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,16 +26,12 @@ public class Report {
     @Column(name="id")
     private Long id;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name="client_fk")
     private Client client;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="inspector_fk")
-    private Inspector inspector;
-
     @Column(name="date")
-    private Date date;
+    private LocalDateTime date;
 
     @NotBlank(message = "Comment is mandatory")
     @Column(name="comment")
@@ -55,4 +52,9 @@ public class Report {
     @JsonIgnore
     @OneToMany(mappedBy = "report")
     private Set<Renouncement> renouncement;
+
+    @Override
+    public String toString(){
+        return " ";
+    }
 }

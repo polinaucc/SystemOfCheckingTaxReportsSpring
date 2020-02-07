@@ -22,12 +22,12 @@ public class Claim {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @JoinColumn(name="clientFk")
+    @JoinColumn(name="client_fk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Client client;
 
     @NotNull
-    @JoinColumn(name="inspectorFk")
+    @JoinColumn(name="inspector_fk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Inspector inspector;
 
@@ -39,4 +39,25 @@ public class Claim {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Override
+    public String toString() {
+        if(client.getClientType()==ClientType.INDIVIDUAL)
+        return "Claim{" +
+                "id=" + id +
+                ", client=" + client.getIndividual() +
+                ", inspector=" + inspector +
+                ", reason='" + reason + '\'' +
+                ", status=" + status +
+                '}';
+        else
+            return "Claim{" +
+                    "id=" + id +
+                    ", client=" + client.getLegalEntity() +
+                    ", inspector=" + inspector +
+                    ", reason='" + reason + '\'' +
+                    ", status=" + status +
+                    '}';
+
+    }
 }

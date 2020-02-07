@@ -64,31 +64,31 @@ class ClaimServiceTest {
         verify(claimRepository, times(1)).save(currentClaim);
     }
 
-    @Test
-    void getAllClaims() {
-        int page = 1;
-        int size = 10;
-        String sortParameter = "reason";
-        String sortDir = "asc";
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(claims));
+//    @Test
+//    void getAllClaims() {
+//        int page = 1;
+//        int size = 10;
+//        String sortParameter = "reason";
+//        String sortDir = "asc";
+//        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
+//        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(claims));
+//
+//        List<Claim> actualList = claimService.getAllClaims(pageReq);
+//
+//        Assert.assertEquals(claims, actualList);
+//    }
 
-        List<Claim> actualList = claimService.getAllClaims(pageReq);
-
-        Assert.assertEquals(claims, actualList);
-    }
-
-    @Test
-    void getClaimsByClient() {
-        Claim clientWith2IDClaim = claims.get(1);
-        List<Claim> expectedClaimsList = Arrays.asList(clientWith2IDClaim);
-        when(claimRepository.findByClient(clientWith2ID)).thenReturn(expectedClaimsList);
-
-        List<Claim> actualClaims = claimService.getClaimsByClient(clientWith2ID);
-
-        Assert.assertEquals(1, actualClaims.size());
-        Assert.assertEquals(expectedClaimsList, actualClaims);
-    }
+//    @Test
+//    void getClaimsByClient() {
+//        Claim clientWith2IDClaim = claims.get(1);
+//        List<Claim> expectedClaimsList = Arrays.asList(clientWith2IDClaim);
+//        when(claimRepository.findByClient(clientWith2ID)).thenReturn(expectedClaimsList);
+//
+//        List<Claim> actualClaims = claimService.getClaimsByClient(clientWith2ID);
+//
+//        Assert.assertEquals(1, actualClaims.size());
+//        Assert.assertEquals(expectedClaimsList, actualClaims);
+//    }
 
     @Test
     public void getClaimById(){
@@ -102,20 +102,20 @@ class ClaimServiceTest {
         Assert.assertEquals(expectedOptionalClaim, actualClaim);
     }
 
-    @Test
-    void getAllClaimsMoreThan10() {
-        int page = 2;
-        int size = 10;
-        String sortParameter = "reason";
-        String sortDir = "asc";
-        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
-        List<Claim> expectedClaims = claimsWithj11elements.subList(9, 10);
-        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(expectedClaims));
-
-        List<Claim> actualList = claimService.getAllClaims(pageReq);
-
-        Assert.assertEquals(expectedClaims, actualList);
-    }
+//    @Test
+//    void getAllClaimsMoreThan10() {
+//        int page = 2;
+//        int size = 10;
+//        String sortParameter = "reason";
+//        String sortDir = "asc";
+//        PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParameter);
+//        List<Claim> expectedClaims = claimsWithj11elements.subList(9, 10);
+//        when(claimRepository.findAll(pageReq)).thenReturn(new PageImpl<>(expectedClaims));
+//
+//        List<Claim> actualList = claimService.getAllClaims(pageReq);
+//
+//        Assert.assertEquals(expectedClaims, actualList);
+//    }
 
     @Test
     void getClaimsByInspector() {

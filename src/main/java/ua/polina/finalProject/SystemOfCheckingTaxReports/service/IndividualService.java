@@ -24,9 +24,8 @@ public class IndividualService {
         this.individualRepository = individualRepository;
     }
 
-    public List<Individual> getAllIndividuals(Pageable pageable) {
-        Page<Individual> allIndividuals = individualRepository.findAll(pageable);
-        return allIndividuals.getContent();
+    public Page<Individual> getAllIndividuals(Pageable pageable) {
+        return individualRepository.findAll(pageable);
     }
 
     public Optional<Individual> getById(Long id) {
@@ -57,7 +56,6 @@ public class IndividualService {
     public Individual update(Individual individual) {
         Long id = individual.getId();
         return individualRepository.findById(id).map(individualFromDB -> {
-            individualFromDB.setClient(individual.getClient());
             individualFromDB.setSurname(individual.getSurname());
             individualFromDB.setFirstName(individual.getFirstName());
             individualFromDB.setSecondName(individual.getSecondName());

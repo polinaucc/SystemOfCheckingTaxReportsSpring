@@ -7,9 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Claim;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Client;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.ClaimRepository;
 
 import javax.transaction.Transactional;
@@ -36,10 +34,8 @@ public class ClaimService {
         return claimRepository.findById(id);
     }
 
-    public List<Claim> getAllClaims(Pageable pageable) {
-        Page<Claim> allClaims = claimRepository.findAll(pageable);
-        List<Claim> claims = allClaims.getContent();
-        return claims;
+    public Page<Claim> getAllClaims(Pageable pageable) {
+        return claimRepository.findAll(pageable);
     }
 
     public List<Claim> getClaimsByClient(Client client) {
@@ -48,5 +44,14 @@ public class ClaimService {
 
     public List<Claim> getClaimsByInspector(Inspector inspector) {
         return claimRepository.findByInspector(inspector);
+    }
+
+    @Transactional
+    public Claim update(Claim claim, Status status) {
+        Long id = claim.getId();
+        return claimRepository.findById(id).map(claimFromDB -> {
+            claimFromDB.setStatus(status);
+            return claimRepository.save(claimFromDB);
+        }).orElseGet(() -> claimRepository.save(claim));
     }
 }

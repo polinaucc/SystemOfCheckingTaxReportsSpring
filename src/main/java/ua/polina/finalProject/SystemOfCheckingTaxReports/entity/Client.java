@@ -2,10 +2,7 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,6 +31,10 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private ClientType clientType;
 
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "inspector_fk")
+    private Inspector inspector;
+
     @JsonIgnore
     @OneToOne(mappedBy = "client")
     private Individual individual;
@@ -43,10 +44,21 @@ public class Client {
     private LegalEntity legalEntity;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "client")
-    private Report report;
+    @OneToMany(mappedBy = "client")
+    private Set<Report> report;
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
     private Set<Claim> claims;
+
+    @Override
+    public String toString() {
+        if (individual != null) {
+            return individual.getSurname()+
+                    " " + individual.getFirstName() + " "
+                    + individual.getSecondName();
+        } else{
+            return legalEntity.getName();
+        }
+    }
 }
