@@ -13,10 +13,5 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class ReportDTO {
-    private Long clientId;
-    private Long inspectorId;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date date;
     private String comment;
-    private String status;
 }

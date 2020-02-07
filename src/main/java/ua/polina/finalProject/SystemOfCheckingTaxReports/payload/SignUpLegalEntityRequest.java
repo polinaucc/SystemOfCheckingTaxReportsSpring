@@ -30,4 +30,6 @@ public class SignUpLegalEntityRequest {
     private String mfo;
 
     private String address;
+
+    private Long inspectorId;
 }

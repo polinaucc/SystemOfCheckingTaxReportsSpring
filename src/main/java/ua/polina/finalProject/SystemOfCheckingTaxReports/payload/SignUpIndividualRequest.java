@@ -1,6 +1,7 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.payload;
 
 import lombok.Data;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -39,4 +40,6 @@ public class SignUpIndividualRequest {
     private String identCode;
 
     private String address;
+
+    private Long inspectorId;
 }

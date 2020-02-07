@@ -2,15 +2,18 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "renouncement")
@@ -26,7 +29,7 @@ public class Renouncement {
     private Report report;
 
     @Column(name="date")
-    private Date date;
+    private LocalDateTime date;
 
     @NotNull
     @Column(name="reason")

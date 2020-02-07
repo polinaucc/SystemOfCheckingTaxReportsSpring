@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClaimDTO {
-    private String reason;
+public class ChangeInspectorDTO {
+    private Long inspectorId;
 }
