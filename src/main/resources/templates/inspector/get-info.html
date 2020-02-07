@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Renouncement</title>
+    <style>
+        table {
+            width: 100%;
+        }
+
+        table td, table th {
+            border: 1px solid grey;
+        }
+
+        table th {
+            background: #eee;
+        }
+
+        .pagination-div span {
+            border-radius: 3px;
+            border: 1px solid #999;
+            padding: 5px;
+            margin: 10px 0px 0px 10px;
+            display: inline-block
+        }
+    </style>
+</head>
+<body>
+<h2>Reports</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th th:text="id"></th>
+        <th th:text="reportId"></th>
+        <th th:text="reason"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ren, iStat : ${renouncements}"
+        th:style="${iStat.odd}? 'font-weight: bold;'"
+        th:alt-title="${iStat.even}? 'even' : 'odd'">
+        <td th:text="${ren.id}"></td>
+        <td th:text="${ren.report.id}"></td>
+        <td th:text="${ren.reason}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

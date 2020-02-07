@@ -1,70 +1,118 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.InspectorDTO;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.RenouncementDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.exceptions.ResourceNotFoundException;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.service.InspectorService;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.service.UserService;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.service.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("/api/inspectors")
+@Controller
+@SessionAttributes("report")
+@RequestMapping("/inspector")
 public class InspectorController {
-    @Autowired
     private InspectorService inspectorService;
+    private UserService userService;
+    private ClientService clientService;
+    private ReportService reportService;
+    private RenouncementService renouncementService;
 
     @Autowired
-    private UserService userService;
-
-    @GetMapping("")
-    public List<Inspector> getAllInspectors(
-            @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
-    ) {
-        return inspectorService.getAllInspectors(pageable);
+    public InspectorController(InspectorService inspectorService,
+                               UserService userService,
+                               ClientService clientService,
+                               ReportService reportService,
+                               RenouncementService renouncementService) {
+        this.inspectorService = inspectorService;
+        this.userService = userService;
+        this.clientService = clientService;
+        this.reportService = reportService;
+        this.renouncementService = renouncementService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity getInspectorById(@PathVariable(name="id") Long id) {
-        return inspectorService.getById(id)
-                .map(inspector -> ResponseEntity.ok(inspector))
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/index")
+    public String getIndex() {
+        return "inspector/inspector-page";
     }
 
-    @Secured("ADMIN")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/create")
-    public void saveNewInspector(@Valid @RequestBody InspectorDTO reqInspector) {
-        User user = userService.getByEmail(reqInspector.getUserEmail())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "user",
-                        "email",
-                        reqInspector.getUserEmail())
-                );
+    @GetMapping("/individuals")
+    public String getIndividualsPage(Model model, @CurrentUser User user) {
+        List<Client> individuals = clientService.getByClientType(ClientType.INDIVIDUAL, user.getInspector());
+        model.addAttribute("individuals", individuals);
+        return "inspector/get-individuals-page";
+    }
 
-        Set<RoleType> newRoles = user.getRoles();
-        newRoles.add(RoleType.INSPECTOR);
-        user.setRoles(newRoles);
-        userService.saveNewUser(user);
+    @GetMapping("/legals")
+    public String getLegalsPage(Model model, @CurrentUser User user) {
+        List<Client> legals = clientService.getByClientType(ClientType.LEGAL_ENTITY, user.getInspector());
+        model.addAttribute("legals", legals);
+        return "inspector/get-legals-page";
+    }
 
-        Inspector inspector = Inspector.builder()
-                .surname(reqInspector.getSurname())
-                .firstName(reqInspector.getFirstName())
-                .secondName(reqInspector.getSecondName())
-                .employmentDate(reqInspector.getEmploymentDate())
-                .user(user)
+    @GetMapping("/reports")
+    public String getReportsPage(Model model, @CurrentUser User user) {
+        List<Report> reports = reportService.getByInspector(user.getInspector());
+        model.addAttribute("reports", reports);
+        return "inspector/get-reports-page";
+    }
+
+    @GetMapping("/accept-report/{id}")
+    public String acceptReport(@PathVariable("id") Long id, Model model) {
+        //TODO check optional
+        Report report = reportService.getById(id).get();
+        reportService.update(report, Status.ACCEPTED);
+        return "redirect:inspector/reports";
+    }
+
+    @GetMapping("/reject-report/{id}")
+    public String getRejectReportForm(@PathVariable("id") Long id, Model model, @CurrentUser User user) {
+        //TODO check optional
+        Report report = reportService.getById(id).get();
+        model.addAttribute("report", report);
+        model.addAttribute("renouncement", new RenouncementDTO());
+        return "inspector/new-reject";
+    }
+
+    @PostMapping("/reject-report")
+    public String rejectReport(@ModelAttribute("report") Report report,
+                               @ModelAttribute("renouncement") RenouncementDTO renouncementDTO,
+                               BindingResult bindingResult, Model model){
+        //TODO transactional method in service
+        reportService.update(report, Status.REJECTED);
+        Renouncement renouncement = Renouncement.builder()
+                .report(report)
+                .date(LocalDateTime.now())
+                .reason(renouncementDTO.getReason())
                 .build();
+        renouncementService.save(renouncement);
+        return "redirect:/inspector/reports";
+    }
 
-        this.inspectorService.saveNewInspector(inspector);
+    @GetMapping("/info-report/{id}")
+    public String getInfo(@PathVariable("id") Long id, Model model){
+        //TODO check optional
+        Report report = reportService.getById(id).get();
+        model.addAttribute("renouncements", renouncementService.getByReport(report));
+        return "inspector/get-info";
     }
 }

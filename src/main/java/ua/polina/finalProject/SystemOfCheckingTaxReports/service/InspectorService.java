@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.User;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.InspectorRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Slf4j
 @Service
 public class InspectorService {
@@ -25,9 +25,17 @@ public class InspectorService {
         this.inspectorRepository = inspectorRepository;
     }
 
-    public List<Inspector> getAllInspectors(Pageable pageable) {
-        Page<Inspector> allInspectors = inspectorRepository.findAll(pageable);
-        return allInspectors.getContent();
+    public Page<Inspector> getAllInspectors(Pageable pageable) {
+        return inspectorRepository.findAll(pageable);
+    }
+
+    public List<Inspector> getAllInspectors() {
+        return inspectorRepository.findAll();
+
+    }
+
+    public Optional<Inspector> getByUser(User user){
+        return inspectorRepository.findByUser(user);
     }
 
     public Optional<Inspector> getById(Long id){
