@@ -5,9 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.constants.ErrorMessages;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.InspectorDTO;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.SignUpIndividualDTO;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.SignUpLegalEntityDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.*;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.SignUpIndividualRequest;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.SignUpLegalEntityRequest;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.*;
 
 import javax.transaction.Transactional;
@@ -37,35 +37,36 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String verifyIfExistsIndividual(SignUpIndividualRequest signUpIndividualRequest) {
-        if (userRepository.existsUserByEmail(signUpIndividualRequest.getEmail()))
+    public String verifyIfExistsIndividual(SignUpIndividualDTO signUpIndividualDTO) {
+        if (userRepository.existsUserByEmail(signUpIndividualDTO.getEmail()))
             return ErrorMessages.EMAIL_EXIST;
-        if (individualRepository.existsIndividualByPassport(signUpIndividualRequest.getPassport()))
+        if (individualRepository.existsIndividualByPassport(signUpIndividualDTO.getPassport()))
             return ErrorMessages.PASSPORT_IN_USE;
-        if (individualRepository.existsIndividualByIdentCode(signUpIndividualRequest.getIdentCode()))
+        if (individualRepository.existsIndividualByIdentCode(signUpIndividualDTO.getIdentCode()))
             return ErrorMessages.IDENT_CODE_IN_USE;
 
         return ErrorMessages.EMPTY_STRING;
     }
 
-    public String verifyIfExistsInspector(InspectorDTO reqInspector){
+    public String verifyIfExistsInspector(InspectorDTO reqInspector) {
         if (userRepository.existsUserByEmail(reqInspector.getUserEmail()))
             return ErrorMessages.EMAIL_EXIST;
         return ErrorMessages.EMPTY_STRING;
     }
 
-    public String verifyIfExistsLegalEntity(SignUpLegalEntityRequest signUpLegalEntityRequest) {
-        if (userRepository.existsUserByEmail(signUpLegalEntityRequest.getEmail()))
+    public String verifyIfExistsLegalEntity(SignUpLegalEntityDTO signUpLegalEntityDTO) {
+        if (userRepository.existsUserByEmail(signUpLegalEntityDTO.getEmail()))
             return ErrorMessages.EMAIL_EXIST;
-        if (legalEntityRepository.existsLegalEntityByEdrpou(signUpLegalEntityRequest.getEdrpou()))
+        if (legalEntityRepository.existsLegalEntityByEdrpou(signUpLegalEntityDTO.getEdrpou()))
             return ErrorMessages.EDRPOU_IN_USE;
-        if (legalEntityRepository.existsLegalEntityByName(signUpLegalEntityRequest.getName()))
+        if (legalEntityRepository.existsLegalEntityByName(signUpLegalEntityDTO.getName()))
             return ErrorMessages.NAME_IN_USE;
         return ErrorMessages.EMPTY_STRING;
     }
 
-    public boolean saveNewInspector(InspectorDTO reqInspector){
+    public boolean saveNewInspector(InspectorDTO reqInspector) {
         User user = new User();
+
         user.getAuthorities().add(RoleType.INSPECTOR);
         user.setEmail(reqInspector.getUserEmail());
         user.setPassword(passwordEncoder.encode(reqInspector.getPassword()));
@@ -85,8 +86,9 @@ public class RegistrationService {
         return (inspectorRepository.save(inspector) != null);
     }
 
-    public boolean saveNewLegalEntity(SignUpLegalEntityRequest legalEntityRequest) {
+    public boolean saveNewLegalEntity(SignUpLegalEntityDTO legalEntityRequest) {
         User user = new User();
+
         user.getAuthorities().add(RoleType.CLIENT);
         user.setEmail(legalEntityRequest.getEmail());
         user.setPassword(passwordEncoder.encode(legalEntityRequest.getPassword()));
@@ -95,6 +97,7 @@ public class RegistrationService {
         if (userRepository.save(user) == null) return false;
 
         Client client = new Client();
+
         client.setUser(user);
         client.setClientType(ClientType.LEGAL_ENTITY);
         //TODO: check optional
@@ -104,6 +107,7 @@ public class RegistrationService {
         if (clientRepository.save(client) == null) return false;
 
         LegalEntity legalEntity = new LegalEntity();
+
         legalEntity.setClient(client);
         legalEntity.setName(legalEntityRequest.getName());
         legalEntity.setEdrpou(legalEntityRequest.getEdrpou());
@@ -114,8 +118,9 @@ public class RegistrationService {
         return (legalEntityRepository.save(legalEntity) != null);
     }
 
-    public boolean saveNewIndividual(SignUpIndividualRequest individualRequest) {
+    public boolean saveNewIndividual(SignUpIndividualDTO individualRequest) {
         User user = new User();
+
         user.getAuthorities().add(RoleType.CLIENT);
         user.setEmail(individualRequest.getEmail());
         user.setPassword(passwordEncoder.encode(individualRequest.getPassword()));
@@ -124,6 +129,7 @@ public class RegistrationService {
         if (userRepository.save(user) == null) return false;
 
         Client client = new Client();
+
         client.setUser(user);
         client.setClientType(ClientType.INDIVIDUAL);
         //TODO: check optional
@@ -133,6 +139,7 @@ public class RegistrationService {
         if (clientRepository.save(client) == null) return false;
 
         Individual individual = new Individual();
+
         individual.setClient(client);
         individual.setSurname(individualRequest.getSurname());
         individual.setFirstName(individualRequest.getFirstName());

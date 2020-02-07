@@ -15,19 +15,19 @@ import javax.validation.constraints.NotNull;
 @Builder
 
 @Entity
-@Table(name="claim")
+@Table(name = "claim")
 public class Claim {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @JoinColumn(name="client_fk")
+    @JoinColumn(name = "client_fk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Client client;
 
     @NotNull
-    @JoinColumn(name="inspector_fk")
+    @JoinColumn(name = "inspector_fk")
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Inspector inspector;
 
@@ -42,14 +42,14 @@ public class Claim {
 
     @Override
     public String toString() {
-        if(client.getClientType()==ClientType.INDIVIDUAL)
-        return "Claim{" +
-                "id=" + id +
-                ", client=" + client.getIndividual() +
-                ", inspector=" + inspector +
-                ", reason='" + reason + '\'' +
-                ", status=" + status +
-                '}';
+        if (client.getClientType() == ClientType.INDIVIDUAL)
+            return "Claim{" +
+                    "id=" + id +
+                    ", client=" + client.getIndividual() +
+                    ", inspector=" + inspector +
+                    ", reason='" + reason + '\'' +
+                    ", status=" + status +
+                    '}';
         else
             return "Claim{" +
                     "id=" + id +
@@ -58,6 +58,5 @@ public class Claim {
                     ", reason='" + reason + '\'' +
                     ", status=" + status +
                     '}';
-
     }
 }

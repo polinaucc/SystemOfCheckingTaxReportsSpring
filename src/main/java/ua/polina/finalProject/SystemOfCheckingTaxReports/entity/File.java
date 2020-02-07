@@ -16,17 +16,13 @@ import java.util.Set;
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Lob @Column(name="picture")
+    @Lob
+    @Column(name = "picture")
     private byte[] picture;
 
     @ManyToMany(mappedBy = "files")
     private Set<Report> reports;
-
-    @Override
-    public String toString(){
-        return " ";
-    }
 }

@@ -1,4 +1,4 @@
-package ua.polina.finalProject.SystemOfCheckingTaxReports.payload;
+package ua.polina.finalProject.SystemOfCheckingTaxReports.dto;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class SignUpLegalEntityRequest {
+public class SignUpLegalEntityDTO {
     @NotBlank
     @Size(max=40)
     @Email

@@ -1,6 +1,5 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -8,8 +7,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 public class InspectorDTO {
@@ -24,15 +21,15 @@ public class InspectorDTO {
     private String password;
 
     @NotBlank
-    @Size(min=3, max=20)
+    @Size(min = 3, max = 20)
     private String surname;
 
     @NotBlank
-    @Size(min=3, max=20)
+    @Size(min = 3, max = 20)
     private String firstName;
 
     @NotBlank
-    @Size(min=3, max=20)
+    @Size(min = 3, max = 20)
     private String secondName;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")

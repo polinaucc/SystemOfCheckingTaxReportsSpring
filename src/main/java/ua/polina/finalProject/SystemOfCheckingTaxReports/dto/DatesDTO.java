@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class DatesDTO {
+    //TODO maybe remove
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date1;
 

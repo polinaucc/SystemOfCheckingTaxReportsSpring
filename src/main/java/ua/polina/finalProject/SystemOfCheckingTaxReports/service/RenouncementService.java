@@ -2,7 +2,6 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.RenouncementDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Renouncement;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Report;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.RenouncementRepository;
@@ -22,7 +21,7 @@ public class RenouncementService {
         return renouncementRepository.save(renouncement);
     }
 
-    public List<Renouncement> getByReport(Report report){
+    public List<Renouncement> getByReport(Report report) {
         return renouncementRepository.findByReport(report);
     }
 }

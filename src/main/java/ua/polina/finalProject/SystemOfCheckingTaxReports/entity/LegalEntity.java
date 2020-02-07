@@ -19,32 +19,32 @@ import javax.validation.constraints.NotNull;
 public class LegalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="client_fk")
+    @JoinColumn(name = "client_fk")
     private Client client;
 
     @NotBlank(message = "Name is mandatory")
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @NotBlank(message = "Edrpou is mandatory")
-    @Column(name="edrpou")
+    @Column(name = "edrpou")
     private String edrpou;
 
     @NotBlank(message = "MFO is mandatory")
-    @Column(name="mfo")
+    @Column(name = "mfo")
     private String mfo;
 
     @NotBlank(message = "Address is mandatory")
-    @Column(name="address")
+    @Column(name = "address")
     private String address;
 
     @Override
-    public String toString(){
+    public String toString() {
         return name;
     }
 }

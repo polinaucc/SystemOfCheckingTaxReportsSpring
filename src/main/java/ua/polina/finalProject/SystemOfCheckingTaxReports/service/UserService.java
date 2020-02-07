@@ -27,22 +27,19 @@ public class UserService {
     public List<User> getAllUsers(int page, int size, String sortParametr, String sortDir) {
         PageRequest pageReq = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sortParametr);
         Page<User> allUsers = userRepository.findAll(pageReq);
+
         return allUsers.getContent();
     }
 
-    public User saveNewUser(User user){
-        return userRepository.save(user);
-    }
-
-    public Optional<User> getById(Long id){
+    public Optional<User> getById(Long id) {
         return userRepository.findById(id);
     }
 
-    public Optional<User> getByEmail(String email){
+    public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public boolean isExistByEmail(String email){
+    public boolean isExistByEmail(String email) {
         return userRepository.existsUserByEmail(email);
     }
 

@@ -3,9 +3,7 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.LegalEntity;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.LegalEntityRepository;
@@ -44,26 +42,29 @@ public class LegalEntityService {
 
     public LegalEntity update(LegalEntity legalEntity) {
         Long id = legalEntity.getId();
-        return legalEntityRepository.findById(id).map(individualFromDB -> {
-            individualFromDB.setClient(legalEntity.getClient());
-            individualFromDB.setName(legalEntity.getName());
-            individualFromDB.setEdrpou(legalEntity.getEdrpou());
-            individualFromDB.setMfo(legalEntity.getMfo());
-            individualFromDB.setAddress(legalEntity.getAddress());
 
-            return legalEntityRepository.save(individualFromDB);
-        }).orElseGet(() -> legalEntityRepository.save(legalEntity));
+        return legalEntityRepository.findById(id)
+                .map(individualFromDB -> {
+                    individualFromDB.setClient(legalEntity.getClient());
+                    individualFromDB.setName(legalEntity.getName());
+                    individualFromDB.setEdrpou(legalEntity.getEdrpou());
+                    individualFromDB.setMfo(legalEntity.getMfo());
+                    individualFromDB.setAddress(legalEntity.getAddress());
+
+                    return legalEntityRepository.save(individualFromDB);
+                }).orElseGet(() -> legalEntityRepository.save(legalEntity));
     }
 
-    public void deleteById (Long id) {
+    public void deleteById(Long id) {
         legalEntityRepository.deleteById(id);
     }
 
-    public boolean isExistByEdrpou(String edrpou){
+    //TODO: not used methods
+    public boolean isExistByEdrpou(String edrpou) {
         return legalEntityRepository.existsLegalEntityByEdrpou(edrpou);
     }
 
-    public boolean isExistByName(String name){
+    public boolean isExistByName(String name) {
         return legalEntityRepository.existsLegalEntityByEdrpou(name);
     }
 }

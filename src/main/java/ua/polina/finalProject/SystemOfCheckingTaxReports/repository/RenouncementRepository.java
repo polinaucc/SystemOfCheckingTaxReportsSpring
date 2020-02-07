@@ -6,7 +6,6 @@ import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Renouncement;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Report;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface RenouncementRepository extends JpaRepository<Renouncement, Long> {

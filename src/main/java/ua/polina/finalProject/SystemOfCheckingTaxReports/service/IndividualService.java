@@ -3,9 +3,7 @@ package ua.polina.finalProject.SystemOfCheckingTaxReports.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Individual;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.repository.IndividualRepository;
@@ -55,23 +53,26 @@ public class IndividualService {
     @Transactional
     public Individual update(Individual individual) {
         Long id = individual.getId();
-        return individualRepository.findById(id).map(individualFromDB -> {
-            individualFromDB.setSurname(individual.getSurname());
-            individualFromDB.setFirstName(individual.getFirstName());
-            individualFromDB.setSecondName(individual.getSecondName());
-            individualFromDB.setPassport(individual.getPassport());
-            individualFromDB.setIdentCode(individual.getIdentCode());
-            individualFromDB.setAddress(individual.getAddress());
 
-            return individualRepository.save(individualFromDB);
-        }).orElseGet(() -> individualRepository.save(individual));
+        return individualRepository.findById(id)
+                .map(individualFromDB -> {
+                    individualFromDB.setSurname(individual.getSurname());
+                    individualFromDB.setFirstName(individual.getFirstName());
+                    individualFromDB.setSecondName(individual.getSecondName());
+                    individualFromDB.setPassport(individual.getPassport());
+                    individualFromDB.setIdentCode(individual.getIdentCode());
+                    individualFromDB.setAddress(individual.getAddress());
+
+                    return individualRepository.save(individualFromDB);
+                }).orElseGet(() -> individualRepository.save(individual));
     }
 
-    public boolean isExistByPassport(String passport){
+    //TODO: not used methods
+    public boolean isExistByPassport(String passport) {
         return individualRepository.existsIndividualByPassport(passport);
     }
 
-    public boolean isExistByIdentCode(String identCode){
+    public boolean isExistByIdentCode(String identCode) {
         return individualRepository.existsIndividualByIdentCode(identCode);
     }
 }

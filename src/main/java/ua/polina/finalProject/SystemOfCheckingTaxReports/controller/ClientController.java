@@ -51,7 +51,8 @@ public class ClientController {
     }
 
     @PostMapping("/create-new-report")
-    public String addNewReport(@ModelAttribute("report") ReportDTO reqReport, BindingResult result, Model model, @CurrentUser User user) {
+    public String addNewReport(@ModelAttribute("report") ReportDTO reqReport, BindingResult result,
+                               Model model, @CurrentUser User user) {
         Optional<Client> client = clientService.getByUser(user);
         Status status = Status.NOT_CHECKED;
         //TODO check optional
@@ -71,21 +72,23 @@ public class ClientController {
     public String getReportsPage(Model model, @CurrentUser User user) {
         //ToDO check optional
         List<Report> reports = reportService.getByClient(clientService.getByUser(user).get());
+
         model.addAttribute("reports", reports);
         return "client/get-reports-page";
     }
 
     @GetMapping("/edit/{id}")
-    public String getUpdateForm(@PathVariable("id") Long id, Model model){
+    public String getUpdateForm(@PathVariable("id") Long id, Model model) {
         Report report = reportService.getById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Invalid id"+id));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid id" + id));
+
         model.addAttribute("report", report);
         return "client/update-report";
     }
 
     @PostMapping("/update/{id}")
     public String updateReport(@PathVariable("id") Long id, Report report,
-                                   BindingResult result, Model model) {
+                               BindingResult result, Model model) {
         if (result.hasErrors()) {
             report.setId(id);
             return "client/update-report";
@@ -95,7 +98,7 @@ public class ClientController {
     }
 
     @GetMapping("/create-claim")
-    public String getAddClaimPage(Model model){
+    public String getAddClaimPage(Model model) {
         model.addAttribute("claim", new ClaimDTO());
         return "client/new-claim";
     }
@@ -103,15 +106,14 @@ public class ClientController {
     @PostMapping("/create-claim")
     public String saveNewClaim(@ModelAttribute ClaimDTO reqClaim, Model model, BindingResult result, @CurrentUser User user) {
         Optional<Client> client = clientService.getByUser(user);
-        System.out.println(user.getClient().getIndividual().getSurname());
-        if (client.isEmpty()) throw new ResourceNotFoundException("claim", "client", client);
 
         Claim claim = Claim.builder()
-                .client(client.get())
+                .client(client.orElseThrow(() -> new ResourceNotFoundException("claim", "client", client)))
                 .inspector(client.get().getInspector())
                 .reason(reqClaim.getReason())
                 .status(Status.NOT_CHECKED)
                 .build();
+
         this.claimService.saveNewClaim(claim);
         return "redirect:/client/my-claims";
     }
@@ -120,6 +122,7 @@ public class ClientController {
     public String getClaimsPage(Model model, @CurrentUser User user) {
         //TODO check optional
         List<Claim> claims = claimService.getClaimsByClient(clientService.getByUser(user).get());
+
         model.addAttribute("claims", claims);
         return "client/get-claims-page";
     }

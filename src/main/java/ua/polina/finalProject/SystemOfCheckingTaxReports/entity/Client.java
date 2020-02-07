@@ -1,8 +1,10 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,7 +16,7 @@ import java.util.Set;
 @Builder
 
 @Entity
-@Table(name="client")
+@Table(name = "client")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -54,10 +56,10 @@ public class Client {
     @Override
     public String toString() {
         if (individual != null) {
-            return individual.getSurname()+
+            return individual.getSurname() +
                     " " + individual.getFirstName() + " "
                     + individual.getSecondName();
-        } else{
+        } else {
             return legalEntity.getName();
         }
     }

@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -23,18 +22,18 @@ import java.util.Set;
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="client_fk")
+    @JoinColumn(name = "client_fk")
     private Client client;
 
-    @Column(name="date")
+    @Column(name = "date")
     private LocalDateTime date;
 
     @NotBlank(message = "Comment is mandatory")
-    @Column(name="comment")
+    @Column(name = "comment")
     private String comment;
 
     @NotNull
@@ -52,9 +51,4 @@ public class Report {
     @JsonIgnore
     @OneToMany(mappedBy = "report")
     private Set<Renouncement> renouncement;
-
-    @Override
-    public String toString(){
-        return " ";
-    }
 }

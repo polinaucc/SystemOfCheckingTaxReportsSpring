@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -20,18 +19,18 @@ import java.util.Date;
 public class Renouncement {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="report_id")
+    @JoinColumn(name = "report_id")
     private Report report;
 
-    @Column(name="date")
+    @Column(name = "date")
     private LocalDateTime date;
 
     @NotNull
-    @Column(name="reason")
+    @Column(name = "reason")
     private String reason;
 }

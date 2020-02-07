@@ -1,31 +1,16 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.InspectorDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.RenouncementDTO;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.*;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.exceptions.ResourceNotFoundException;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.service.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @SessionAttributes("report")
@@ -58,6 +43,7 @@ public class InspectorController {
     @GetMapping("/individuals")
     public String getIndividualsPage(Model model, @CurrentUser User user) {
         List<Client> individuals = clientService.getByClientType(ClientType.INDIVIDUAL, user.getInspector());
+
         model.addAttribute("individuals", individuals);
         return "inspector/get-individuals-page";
     }
@@ -65,6 +51,7 @@ public class InspectorController {
     @GetMapping("/legals")
     public String getLegalsPage(Model model, @CurrentUser User user) {
         List<Client> legals = clientService.getByClientType(ClientType.LEGAL_ENTITY, user.getInspector());
+
         model.addAttribute("legals", legals);
         return "inspector/get-legals-page";
     }
@@ -72,6 +59,7 @@ public class InspectorController {
     @GetMapping("/reports")
     public String getReportsPage(Model model, @CurrentUser User user) {
         List<Report> reports = reportService.getByInspector(user.getInspector());
+
         model.addAttribute("reports", reports);
         return "inspector/get-reports-page";
     }
@@ -80,6 +68,7 @@ public class InspectorController {
     public String acceptReport(@PathVariable("id") Long id, Model model) {
         //TODO check optional
         Report report = reportService.getById(id).get();
+
         reportService.update(report, Status.ACCEPTED);
         return "redirect:inspector/reports";
     }
@@ -88,6 +77,7 @@ public class InspectorController {
     public String getRejectReportForm(@PathVariable("id") Long id, Model model, @CurrentUser User user) {
         //TODO check optional
         Report report = reportService.getById(id).get();
+
         model.addAttribute("report", report);
         model.addAttribute("renouncement", new RenouncementDTO());
         return "inspector/new-reject";
@@ -96,7 +86,7 @@ public class InspectorController {
     @PostMapping("/reject-report")
     public String rejectReport(@ModelAttribute("report") Report report,
                                @ModelAttribute("renouncement") RenouncementDTO renouncementDTO,
-                               BindingResult bindingResult, Model model){
+                               BindingResult bindingResult, Model model) {
         //TODO transactional method in service
         reportService.update(report, Status.REJECTED);
         Renouncement renouncement = Renouncement.builder()
@@ -104,14 +94,16 @@ public class InspectorController {
                 .date(LocalDateTime.now())
                 .reason(renouncementDTO.getReason())
                 .build();
+
         renouncementService.save(renouncement);
         return "redirect:/inspector/reports";
     }
 
     @GetMapping("/info-report/{id}")
-    public String getInfo(@PathVariable("id") Long id, Model model){
+    public String getInfo(@PathVariable("id") Long id, Model model) {
         //TODO check optional
         Report report = reportService.getById(id).get();
+
         model.addAttribute("renouncements", renouncementService.getByReport(report));
         return "inspector/get-info";
     }

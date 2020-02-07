@@ -54,16 +54,17 @@ public class AdminController {
     @PostMapping("/save-inspector")
     public String saveInspector(@Valid @ModelAttribute("signInspector") InspectorDTO reqInspector,
                                 BindingResult bindingResult, Model model) {
-        System.out.println(reqInspector);
-
         String error = registrationService.verifyIfExistsInspector(reqInspector);
+
         if (!error.equals(ErrorMessages.EMPTY_STRING)) {
             model.addAttribute("error", error);
             return "admin/RegisterInspector";
         }
+
         String resultMessage = registrationService.saveNewInspector(reqInspector) ?
                 SuccessMessages.SUCCESS_MESSAGE :
                 ErrorMessages.CANNOT_SAVE;
+
         if (resultMessage.equals(ErrorMessages.CANNOT_SAVE)) {
             model.addAttribute("error2", resultMessage);
             return "admin/RegisterInspector";
@@ -81,11 +82,11 @@ public class AdminController {
     public String getIndividualsPage(Model model,
                                      @RequestParam("page") Optional<Integer> page,
                                      @RequestParam("size") Optional<Integer> size) {
-        System.out.println("individual page--------------------------------------------------------------------");
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
 
         Page<Individual> individualPage = individualService.getAllIndividuals(PageRequest.of(currentPage - 1, pageSize));
+
         model.addAttribute("individualPage", individualPage);
 
         int totalPages = individualPage.getTotalPages();
@@ -110,7 +111,7 @@ public class AdminController {
     public String getUpdateForm(@PathVariable("id") Long id, Model model) {
         Individual individual = individualService.getById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid id" + id));
-        System.out.println(individual.getSurname());
+
         model.addAttribute("individual", individual);
         return "admin/update-individual";
     }
@@ -130,11 +131,11 @@ public class AdminController {
     public String getInspectorsPage(Model model,
                                     @RequestParam("page") Optional<Integer> page,
                                     @RequestParam("size") Optional<Integer> size) {
-        System.out.println("Inspector page--------------------------------------------------------------------");
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
 
         Page<Inspector> inspectorPage = inspectorService.getAllInspectors(PageRequest.of(currentPage - 1, pageSize));
+
         model.addAttribute("inspectorPage", inspectorPage);
 
         int totalPages = inspectorPage.getTotalPages();
@@ -156,6 +157,7 @@ public class AdminController {
         int pageSize = size.orElse(10);
 
         Page<Claim> claimPage = claimService.getAllClaims(PageRequest.of(currentPage - 1, pageSize));
+
         model.addAttribute("claimPage", claimPage);
 
         int totalPages = claimPage.getTotalPages();
@@ -173,6 +175,7 @@ public class AdminController {
     public String rejectClaim(@PathVariable("id") Long id, Model model) {
         //TODO check optionals
         Claim claim = claimService.getClaimById(id).get();
+
         claimService.update(claim, Status.REJECTED);
         return "redirect:/admin/claims";
     }
@@ -181,9 +184,11 @@ public class AdminController {
     public String getAcceptClaimForm(@PathVariable("id") Long id, Model model) {
         //TODO check optionals
         Claim claim = claimService.getClaimById(id).get();
+
         claimService.update(claim, Status.ACCEPTED);
         Inspector insp = claim.getClient().getInspector();
         List<Inspector> inspectorList = inspectorService.getAllInspectors();
+
         inspectorList.remove(insp);
         model.addAttribute("client", claim.getClient());
         model.addAttribute("inspectors", inspectorList);
@@ -193,14 +198,12 @@ public class AdminController {
 
 
     @PostMapping("/accept-claim")
-    public String acceptClaim(@ModelAttribute("changeInsp")ChangeInspectorDTO changeInspectorDTO,
-            @ModelAttribute("client") Client client, BindingResult result, Model model) {
+    public String acceptClaim(@ModelAttribute("changeInsp") ChangeInspectorDTO changeInspectorDTO,
+                              @ModelAttribute("client") Client client, BindingResult result, Model model) {
         //TODO check optionals
         Inspector inspector = inspectorService.getById(changeInspectorDTO.getInspectorId()).get();
-        System.out.println(inspector);
 
         clientService.update(client, inspector);
-
         return "redirect:/admin/claims";
     }
 
