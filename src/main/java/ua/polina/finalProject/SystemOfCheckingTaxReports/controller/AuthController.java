@@ -1,111 +1,126 @@
 package ua.polina.finalProject.SystemOfCheckingTaxReports.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.constants.ErrorMessages;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.constants.SuccessMessages;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.exceptions.NotUniqueFieldException;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.exceptions.NotValidException;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.SignUpIndividualRequest;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.SignUpLegalEntityRequest;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.LoginDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.ApiResponse;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.JwtAuthenticationResponse;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.UserDetailsResponse;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.security.CurrentUser;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.security.JwtTokenProvider;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.security.UserPrincipal;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.RoleType;
+import ua.polina.finalProject.SystemOfCheckingTaxReports.payload.*;
 import ua.polina.finalProject.SystemOfCheckingTaxReports.service.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@RestController
-@RequestMapping("/api/auth")
+@Controller
+@RequestMapping("/auth")
 public class AuthController {
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
     RegistrationService registrationService;
-
-    @Autowired
     UserService userService;
-
-    @Autowired
     LegalEntityService legalEntityService;
-
-    @Autowired
     IndividualService individualService;
-
-    @Autowired
+    InspectorService inspectorService;
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtTokenProvider tokenProvider;
+    public AuthController(RegistrationService registrationService,
+                          UserService userService,
+                          LegalEntityService legalEntityService,
+                          IndividualService individualService,
+                          InspectorService inspectorService,
+                          PasswordEncoder passwordEncoder) {
+        this.registrationService = registrationService;
+        this.userService = userService;
+        this.legalEntityService = legalEntityService;
+        this.individualService = individualService;
+        this.inspectorService = inspectorService;
+        this.passwordEncoder = passwordEncoder;
 
-    @PostMapping("/signUpIndividual")
-    public ResponseEntity<ApiResponse> registerIndividual(@Valid @RequestBody SignUpIndividualRequest signUpIndividualRequest) throws  NotUniqueFieldException {
+    }
+
+    @RequestMapping("/sign-up-individual")
+    public String getRegisterIndividualPage(Model model) {
+        List<Inspector> inspectors = inspectorService.getAllInspectors();
+        model.addAttribute("inspectors", inspectors);
+        model.addAttribute("sign", new SignUpIndividualRequest());
+        model.addAttribute("error", null);
+        model.addAttribute("error2", null);
+        return "RegisterIndividual";
+    }
+
+    @PostMapping("/sign-up-individual")
+    public String addIndividual(@Valid @ModelAttribute("sign") SignUpIndividualRequest signUpIndividualRequest,
+                                BindingResult bindingResult, Model model) {
+
         String error = registrationService.verifyIfExistsIndividual(signUpIndividualRequest);
-        if (!error.equals(ErrorMessages.EMPTY_STRING)) throw new NotUniqueFieldException(error);
-
-        String resultMessage = registrationService.saveNewIndividual(signUpIndividualRequest)
-                ? SuccessMessages.SUCCESS_MESSAGE
-                : ErrorMessages.CANNOT_SAVE;
-        boolean isSuccess = resultMessage.equals(SuccessMessages.SUCCESS_MESSAGE);
-
-        return new ResponseEntity<>(
-                new ApiResponse(isSuccess, resultMessage),
-                isSuccess ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST
-        );
+        if (!error.equals(ErrorMessages.EMPTY_STRING)) {
+            model.addAttribute("error", error);
+            return "RegisterIndividual";
+        }
+        String resultMessage = registrationService.saveNewIndividual(signUpIndividualRequest) ?
+                SuccessMessages.SUCCESS_MESSAGE :
+                ErrorMessages.CANNOT_SAVE;
+        if (resultMessage.equals(ErrorMessages.CANNOT_SAVE)) {
+            model.addAttribute("error2", resultMessage);
+            return "RegisterIndividual";
+        } else {
+            return "logIn";
+        }
     }
 
-    @PostMapping("/signUpLegalEntity")
-    public ResponseEntity<ApiResponse> registerLegacyEntity(@Valid @RequestBody SignUpLegalEntityRequest signUpLegalEntityRequest) {
+    @RequestMapping("/sign-up-legal-entity")
+    public String getRegisterLegalEntityPage(Model model) {
+        model.addAttribute("sign", new SignUpLegalEntityRequest());
+        model.addAttribute("error", null);
+        model.addAttribute("error2", null);
+        return "RegisterLegalEntity";
+    }
+
+    @PostMapping("/sign-up-legal-entity")
+    public String registerLegalEntity(@Valid @ModelAttribute("sign") SignUpLegalEntityRequest signUpLegalEntityRequest,
+                                      BindingResult bindingResult, Model model) {
         String error = registrationService.verifyIfExistsLegalEntity(signUpLegalEntityRequest);
-        if (!error.equals(ErrorMessages.EMPTY_STRING)) throw new NotUniqueFieldException(error);
-
-        String resultMessage = registrationService.saveNewLegalEntity(signUpLegalEntityRequest)
-                    ? SuccessMessages.SUCCESS_MESSAGE
-                    : ErrorMessages.CANNOT_SAVE;
-        boolean isSuccess = resultMessage.equals(SuccessMessages.SUCCESS_MESSAGE);
-
-        return new ResponseEntity<>(
-                new ApiResponse(isSuccess, resultMessage),
-                isSuccess ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST
-        );
+        if (!error.equals(ErrorMessages.EMPTY_STRING)) {
+            model.addAttribute("error", error);
+            return "RegisterLegalEntity";
+        }
+        String resultMessage = registrationService.saveNewLegalEntity(signUpLegalEntityRequest) ?
+                SuccessMessages.SUCCESS_MESSAGE : ErrorMessages.CANNOT_SAVE;
+        if (resultMessage.equals(ErrorMessages.CANNOT_SAVE)) {
+            model.addAttribute("error2", resultMessage);
+            return "RegisterLegalEntity";
+        }
+        return "logIn";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getEmail(),
-                        loginDto.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    @RequestMapping("/login")
+    public String getLogin(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "logout", required = false) String logout,
+            Model model) {
+        model.addAttribute("error", error);
+        model.addAttribute("logout", logout);
+        return "logIn";
     }
 
-    @GetMapping("/me")
-    public UserDetailsResponse getRole(@CurrentUser UserPrincipal user) {
-        return UserDetailsResponse.builder()
-                .id(user.getId())
-                .role(user.getRole())
-                .build();
+    @RequestMapping("/default-success")
+    public String getSuccessPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().contains(RoleType.ADMIN)) {
+            System.out.println("Success-----------------------------------------------------");
+            return "redirect:/admin/index";
+        } else if (SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().contains(RoleType.CLIENT)) {
+            return "redirect:/client/index";
+        } else if (SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().contains(RoleType.INSPECTOR)) {
+            return "redirect:/inspector/index";
+        }
+        return "redirect:/client/index";
     }
 }
-
-
-

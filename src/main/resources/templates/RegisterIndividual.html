@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <section id="content">
-        <form th:action="@{/api/auth/sign-up-individual}" th:object="${sign}" method="post">
+        <form th:action="@{/auth/sign-up-individual}" th:object="${sign}" method="post">
             <h1>Registration form</h1>
             <div th:if="${error != null}">
                 <p th:text="${error}">...</p>
@@ -42,8 +42,16 @@
             <div>
                 <input type="text" placeholder="Address" required="" id="address" th:field="*{address}"/>
             </div>
+            <div class="col-lg-3">
+                <!--              <input type="text" placeholder="Inspector" required="" id="inspector" th:field="*{inspectorId}"/>-->
+                <select class="form-control" id="inspectorOrder" name="inspector" th:field="*{inspectorId}">
+                    <option value="">Select inspector</option>
+                    <option th:each="inspector : ${inspectors}"
+                            th:value="${inspector.id}" th:text="${inspector.firstName}"></option>
+                </select>
+            </div>
             <div>
-                <input type="submit" value="Sign up" />
+                <input type="submit" value="Sign up"/>
                 <a href="logIn.html">Log in</a>
             </div>
         </form><!-- form -->

@@ -6,24 +6,32 @@
     <title>Title</title>
 </head>
 <body>
+<th:block th:insert="fragments/language :: language"/>
+
 <div class="container">
     <section id="content">
-        <form th:action="@{/api/auth/login}" th:object="${authenticate}" method="post">
-            <h1>Login Form</h1>
-            <div th:if="${error!=null}">
-                <p>Wrong login or password</p>
+        <form th:action="@{/auth/login}" method="post">
+            <h1 th:text="#{login.form}">Login Form</h1>
+            <div th:if="${logout}">
+                <div class="alert alert-info" role="alert" th:text="#{logged.out}">Logged out.
+                </div>
+            </div>
+            <div th:if="${error}">
+                <div class="alert alert-danger" role="alert"  th:text="#{invalid.credentials}">Invalid
+                    credentials!
+                </div>
+            </div>
+
+            <div>
+                <input type="text" th:placeholder="#{placeholder.email}" required="" id="email" name="username"/>
             </div>
             <div>
-                <input type="text" placeholder="Email" required="" id="email" th:field="*{email}" />
+                <input type="password" th:placeholder="#{placeholder.password}" required="" id="password" name="password"/>
             </div>
             <div>
-                <input type="password" placeholder="Password" required="" id="password"  th:field="*{password}"/>
-            </div>
-            <div>
-                <input type="submit" value="Log in" />
-                <a href="RegisterIndividual.html">Register individual</a>
-                <a href="RegisterLegalEntity.html">Register legal</a>
-                <p th:if="jwt!=null">Logged sucessfully</p>
+                <input type="submit" th:value="#{login}"/>
+                <a th:href="@{/auth/sign-up-individual}" th:text="#{register.individual}">Register individual</a>
+                <a th:href="@{/auth/sign-up-legal-entity}" th:text="#{register.legal.entity}">Register legal</a>
             </div>
         </form>
     </section>

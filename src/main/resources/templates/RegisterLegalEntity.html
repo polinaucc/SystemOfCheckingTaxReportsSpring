@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <section id="content">
-        <form th:action="@{/api/auth/sign-up-legal-entity}" th:object="${sign}" method="post">
+        <form th:action="@{/auth/sign-up-legal-entity}" th:object="${sign}" method="post">
             <h1>Registration form</h1>
             <div th:if="${error!=null}">
                 <p th:text="${error}">...</p>
