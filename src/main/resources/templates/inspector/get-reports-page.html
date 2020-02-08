@@ -47,9 +47,9 @@
         <td th:text="${report.date}"></td>
         <td th:text="${report.comment}"></td>
         <td th:text="${report.status}"></td>
-        <td><a th:href="@{/inspector/reject-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Reject':' '"></a></td>
-        <td><a th:href="@{/inspector/accept-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Accept':' '"></a></td>
-        <td><a th:href="@{/inspector/info-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).REJECTED} ? 'Info':' '"></a></td>
+        <td><a th:href="@{/inspector/reject-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.system.entity.Status).NOT_CHECKED} ? 'Reject':' '"></a></td>
+        <td><a th:href="@{/inspector/accept-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.system.entity.Status).NOT_CHECKED} ? 'Accept':' '"></a></td>
+        <td><a th:href="@{/inspector/info-report/{id}(id=${report.id})}" th:text="${report.status==T(ua.polina.system.entity.Status).REJECTED} ? 'Info':' '"></a></td>
     </tr>
     </tbody>
 </table>

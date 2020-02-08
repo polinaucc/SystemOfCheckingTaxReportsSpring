@@ -55,10 +55,10 @@
 
         </td>
         <td>
-            <a th:href="@{/admin/reject-claim/{id}(id=${claim.id})}" th:text="${claim.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Reject':' '"></a>
+            <a th:href="@{/admin/reject-claim/{id}(id=${claim.id})}" th:text="${claim.status==T(ua.polina.system.entity.Status).NOT_CHECKED} ? 'Reject':' '"></a>
         </td>
         <td>
-            <a th:href="@{/admin/accept-claim/{id}(id=${claim.id})}" th:text="${claim.status==T(ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Status).NOT_CHECKED} ? 'Accept':' '">Accept</a>
+            <a th:href="@{/admin/accept-claim/{id}(id=${claim.id})}" th:text="${claim.status==T(ua.polina.system.entity.Status).NOT_CHECKED} ? 'Accept':' '">Accept</a>
         </td>
     </tr>
     </tbody>

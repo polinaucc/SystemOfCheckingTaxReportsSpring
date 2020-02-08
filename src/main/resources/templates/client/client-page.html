@@ -2,18 +2,18 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="fragments/head :: head"/>
 <body>
-
+<th:block th:insert="fragments/language :: language"/>
 <th:block th:insert="fragments/header :: header"/>
 <div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/client/my-reports}">My reports</a>
+            <a class="nav-link" th:href="@{/client/my-reports}" th:text="#{my.reports}">My reports</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Info about my inspector</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/client/my-claims}">Complain about my inspector</a>
+            <a class="nav-link" th:href="@{/client/my-claims}" th:text="#{complain.inspector}">Complain about my inspector</a>
         </li>
     </ul>
 </div>
