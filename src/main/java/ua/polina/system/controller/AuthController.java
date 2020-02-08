@@ -1,4 +1,4 @@
-package ua.polina.finalProject.SystemOfCheckingTaxReports.controller;
+package ua.polina.system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -6,17 +6,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.constants.ErrorMessages;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.constants.SuccessMessages;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.Inspector;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.entity.RoleType;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.SignUpIndividualDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.dto.SignUpLegalEntityDTO;
-import ua.polina.finalProject.SystemOfCheckingTaxReports.service.*;
+import org.springframework.web.bind.annotation.*;
+import ua.polina.system.constants.ErrorMessages;
+import ua.polina.system.constants.SuccessMessages;
+import ua.polina.system.entity.Inspector;
+import ua.polina.system.entity.RoleType;
+import ua.polina.system.dto.SignUpIndividualDTO;
+import ua.polina.system.dto.SignUpLegalEntityDTO;
+import ua.polina.system.service.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -44,7 +41,6 @@ public class AuthController {
         this.individualService = individualService;
         this.inspectorService = inspectorService;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     @RequestMapping("/sign-up-individual")
@@ -63,6 +59,10 @@ public class AuthController {
                                 BindingResult bindingResult, Model model) {
         String error = registrationService.verifyIfExistsIndividual(signUpIndividualDTO);
 
+        if(bindingResult.hasErrors()){
+            return "RegisterIndividual";
+        }
+
         if (!error.equals(ErrorMessages.EMPTY_STRING)) {
             model.addAttribute("error", error);
             return "RegisterIndividual";
@@ -76,7 +76,7 @@ public class AuthController {
             model.addAttribute("error2", resultMessage);
             return "RegisterIndividual";
         } else {
-            return "logIn";
+            return "redirect:/auth/login";
         }
     }
 
@@ -92,6 +92,10 @@ public class AuthController {
     public String registerLegalEntity(@Valid @ModelAttribute("sign") SignUpLegalEntityDTO signUpLegalEntityDTO,
                                       BindingResult bindingResult, Model model) {
         String error = registrationService.verifyIfExistsLegalEntity(signUpLegalEntityDTO);
+
+        if(bindingResult.hasErrors()){
+            return "RegisterLegalEntity";
+        }
 
         if (!error.equals(ErrorMessages.EMPTY_STRING)) {
             model.addAttribute("error", error);
